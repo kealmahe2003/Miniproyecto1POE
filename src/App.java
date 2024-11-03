@@ -8,7 +8,9 @@ import militar.soldados.Soldado;
 public class App {
 
     private static final Scanner scanner = new Scanner(System.in);
+
     private static final List<Soldado> soldados = new ArrayList<>();
+
     public static void main(String[] args) throws Exception{
 
         Capitan capitan = new Capitan(10);
@@ -94,7 +96,7 @@ public class App {
         System.out.println("Soldados activos:");
         for(Soldado soldado : soldados){
             soldado.mostrarInformacion();
-            System.out.println("-" + 100);
+            System.out.println("---------------------------------------");
         }
 
     }

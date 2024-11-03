@@ -3,8 +3,8 @@ import militar.Operaciones.OperacionesMilitares;
 
 public class Capitan extends Rango implements OperacionesMilitares {
     private final int cantidadSoldadosBajoSuMando;
+    public Capitan(int cantidadSoldadosBajoSuMando) {
 
-    public Capitan (int cantidadSoldadosBajoSuMando) {
         super(3);
         this.cantidadSoldadosBajoSuMando = cantidadSoldadosBajoSuMando;
     }
