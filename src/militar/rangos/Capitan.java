@@ -16,17 +16,17 @@ public class Capitan extends Rango implements OperacionesMilitares {
 
     @Override
     public void asignarMision(String mision){
-        System.out.println("Mision actual: " + mision);
+    System.out.println("El Capitán ha asignado la misión: " + mision + " a sus " + cantidadSoldadosBajoSuMando + " soldados.");
     }
 
     @Override
     public void reportarEstado(){
-        System.out.println("El capitan se encuentra haciendo la mision con sus " + cantidadSoldadosBajoSuMando + " soldados");
-        if(random.nextBoolean() == true){
-            System.out.println("La mision fue exitosa");
-        }
-        else{
-            System.out.println("La mision fracaso, soldados perdidos: " + random.nextInt(cantidadSoldadosBajoSuMando));
+        System.out.println("El Capitán lidera la misión con sus " + cantidadSoldadosBajoSuMando + " soldados.");
+        if(random.nextBoolean()) {
+            System.out.println("¡La misión fue exitosa!");
+        } else {
+            int soldadosPerdidos = random.nextInt(cantidadSoldadosBajoSuMando + 1);
+            System.out.println("La misión fracasó. Soldados perdidos: " + soldadosPerdidos + "/" + cantidadSoldadosBajoSuMando);
         }
     }
 }
