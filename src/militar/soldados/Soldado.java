@@ -14,7 +14,7 @@ public class Soldado {
     public void mostrarInformacion(){
         System.out.println("----------------------------------------");
         System.out.println("Nombre del soldado: ");
-        System.out.println(nombre);
+        System.out.println(nombre );
         System.out.println("ID:");
         System.out.println(id);
         System.out.println("Rango del soldado: ");
