@@ -10,7 +10,6 @@ public class SoldadoRaso extends Soldado implements OperacionesMilitares{
     @Override
     public void mostrarInformacion() {
         super.mostrarInformacion();
-        System.out.println("Acción: Seguir órdenes.");
     }
 
     public void realizarAccion() {
@@ -23,7 +22,6 @@ public class SoldadoRaso extends Soldado implements OperacionesMilitares{
         + mision);
     }
 
-    @Override
     public void reportarEstado(){
         System.out.println("El soldado " + getId() + " se encuentra activo");
     }

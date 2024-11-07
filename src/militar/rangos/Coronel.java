@@ -16,7 +16,7 @@ public class Coronel extends Rango implements OperacionesMilitares {
 
     @Override
     public void asignarMision(String mision) {
-    System.out.println("El Coronel, con su estrategia de: " + estrategia + ", ha asignado la misión: " + mision + ". Las tropas están preparadas.");
+    System.out.println("El Coronel, con su estrategia de " + estrategia + ", ha asignado la misión " + mision + ". Las tropas están preparadas.");
     }
 
     @Override
