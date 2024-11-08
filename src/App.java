@@ -18,7 +18,7 @@ public class App {
     private static final List<Coronel> coroneles = new ArrayList<>();
 
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception{ //Aqui hacemos el menum del CRUD para entrar a todas las diversas instancias de el programa.
 
         boolean a = true;
         while (a) {
@@ -39,7 +39,7 @@ public class App {
             opcion = scanner.nextInt();
             scanner.nextLine();
 
-            switch (opcion) {
+            switch (opcion) { //Asignamos cada numero a una funcion.
                 case 1 -> agregarSoldado();
 
                 case 2 -> modificarSoldado();
@@ -60,21 +60,21 @@ public class App {
         }
     }
         
-    public static void agregarSoldado() {
+    public static void agregarSoldado() { //Esta es la parte de agregar soldado, la cual nos muestra que tenemos que ingresar para poder crear el soldado correctamente
         System.out.println("----------------------------------------");
         System.out.println("Ingrese el nombre del soldado:");
         String nombre = scanner.nextLine();
         System.out.println("Ingrese el ID: ");
         String id = scanner.nextLine();
         
-        if (buscarID(id) != null) {
+        if (buscarID(id) != null) { //Si alguien quiere poner un soldado con un mismo id ponemos la exepcion para que no ocurra eso
             System.out.println("Ya existe un soldado con este ID.");
             return;
         }
 
 
         
-        String rango = "Soldado Raso";
+        String rango = "Soldado Raso"; //Aqui guardamos el soldado correctamente ingresado
         SoldadoRaso soldadoRaso = new SoldadoRaso(nombre, id);
         soldados.add(soldadoRaso);
     
@@ -84,15 +84,16 @@ public class App {
     }
     
     
-    public static void modificarSoldado() {
+    public static void modificarSoldado() { //Cuando se necesite modificar el soldado, esta es la funcion para hacerlo
         System.out.println("Ingrese la id del soldado: ");
         String id = scanner.nextLine();
         Soldado soldado = buscarID(id);
     
-        if (soldado != null) {
+        if (soldado != null) { //aqui verificamos con el Array si el soldado esta en la lista
             System.out.println("Soldado encontrado:");
             soldado.mostrarInformacion();
             
+            //ingresamos nuevamente los datos del soldado
             System.out.println("Ingrese el nuevo nombre del soldado (o presione Enter para no cambiar):");
             String nuevoNombre = scanner.nextLine();
             if (!nuevoNombre.isEmpty()) {
@@ -101,39 +102,39 @@ public class App {
     
             System.out.println("Ingrese el nuevo rango del soldado(o presione Enter para no cambiar):");
             String nuevoRango = scanner.nextLine();
-            if (!nuevoRango.isEmpty()){
-                soldado.setRango(nuevoRango);
+            if (!nuevoRango.isEmpty()){ 
+                soldado.setRango(nuevoRango);//almacenamos los nuevos datos del soldado
             }
-
+            
             System.out.println("----------------------------------------");
             System.out.println("Soldado modificado exitosamente");
             System.out.println("----------------------------------------");
             
-        } else {
+        } else { //la exepcion cuando sea erroneo el ID
             System.out.println("Id no encontrada");
         }
     }
 
-    public static void eliminarSoldado(){
+    public static void eliminarSoldado(){ //la funcion para eliminar el soldado con el ID
         System.out.println("Ingrese la id para eliminarlo: ");
         String id = scanner.nextLine();
         Soldado soldado = buscarID(id);
 
         if(soldado != null){
-            soldados.remove(soldado);
+            soldados.remove(soldado); //aqui eliminamos el Soldado
             System.out.println("Soldado eliminado");
         }else{
             System.out.println("Id no encontrada");
         }
     }
-
+    //esta funcion ayuda a hacer el listado de los soldados para imprimirlos
     public static void listaSoldados(){
         System.out.println("Soldados activos:");
         for(Soldado soldado : soldados){
             soldado.mostrarInformacion();
         }
     }
-
+    // esto es un filtro para buscar el id del soldado y sea mas facil el trabajar con los datos
     private static Soldado buscarID(String id){
         for (Soldado soldado : soldados){
             if(soldado.getId().equals(id)){
@@ -143,6 +144,7 @@ public class App {
         return null;
     }
 
+    //aqui podemos ver el menu para la gestion de las operaciones de militares
     public static void gestionarOperacionesMilitares() {
         boolean gestionando = true;
         while (gestionando) {
@@ -157,7 +159,7 @@ public class App {
             scanner.nextLine();
 
             switch (opcion) {
-                case 1 -> {
+                case 1 -> { // aqui modificamos la nueva mision del soldado
                     System.out.println("Ingrese la id del soldado: ");
                     String id = scanner.nextLine();
                     Soldado soldado = buscarID(id);
@@ -168,7 +170,7 @@ public class App {
                         String rango = soldado.getRango();
                         if (rango.equals("Soldado Raso")) {
                             System.out.println("El Soldado Raso no puede recibir misiones directamente.");
-                        } else {
+                        } else { //aqui hacemos un filtro dependiendo del rango para las misiones
                             if(rango.equals("Teniente")){
                                 System.out.println("Ingrese la unidad a la que pertenece:");
                                 String unidad = scanner.nextLine();
@@ -209,7 +211,7 @@ public class App {
                     }
                 }
     
-                case 2 -> {
+                case 2 -> { //en este caso mostramos los soldados con sus misiones.
                     System.out.println("Ingrese la id del soldado para ver su estado: ");
                     String id = scanner.nextLine();
                     Soldado soldado = buscarID(id);
