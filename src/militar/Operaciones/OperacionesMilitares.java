@@ -1,5 +1,7 @@
 package militar.Operaciones;
 
+
+//aqui se asignan las misiones y se las almacena para luego ponerlas en los soldados y quede guardado 
 public interface OperacionesMilitares {
 
     void asignarMision(String Mision); //Asigna una misión al soldado.

@@ -2,11 +2,13 @@ package militar.rangos;
 import militar.Operaciones.OperacionesMilitares;
 import militar.soldados.Soldado;
 
+//la clase soldadoraso con las implementaciones de operacionesMilitares
 public class SoldadoRaso extends Soldado implements OperacionesMilitares{
     public SoldadoRaso(String nombre, String id) {
         super(nombre, id, "Soldado Raso");
     }
     
+    //aqui implementamos las cosas de el soldadoraso para que pueda almacenar, imprimir y modificar
     @Override
     public void mostrarInformacion() {
         super.mostrarInformacion();

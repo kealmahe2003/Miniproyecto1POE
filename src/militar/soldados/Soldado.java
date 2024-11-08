@@ -5,12 +5,15 @@ public class Soldado {
     private String id;
     private String rango;
     
+
+    //constructor de soldado
     public Soldado(String nombre,String id,String rango){
         this.nombre = nombre;
         this.id = id;
         this.rango = rango;
     }
     
+    //la forma en que vamos a imprimir la informacion de el soldado
     public void mostrarInformacion(){
         System.out.println("----------------------------------------");
         System.out.println("Nombre del soldado: " + nombre);
@@ -19,6 +22,7 @@ public class Soldado {
         System.out.println("-----------------------------------------\n");
     }
     
+    // aqui se guarda los datos del soldado
     public String getNombre() {
         return nombre;
     }
