@@ -3,42 +3,90 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import militar.soldados.Soldado;
 
-public class AppGUI extends JFrame {
+public class GUI extends JFrame {
     private final List<Soldado> soldados = new ArrayList<>();
-    private final DefaultTableModel tableModel = new DefaultTableModel(new String[]{"ID", "Nombre", "Rango"}, 0);
+    private final DefaultTableModel tableModel = new DefaultTableModel(new String[]{"Nombre","ID"}, 0);
     private final JTable table = new JTable(tableModel);
 
-    public AppGUI() {
+    public GUI() {
         // Configuración de la ventana principal
         setTitle("Sistema de Gestión de Rangos Militares");
-        setSize(1000, 600);
+        setSize(1000, 680);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setResizable(false);
+        setLayout(null);
 
-        // Panel superior con botones
+        //Panel de fondo
+        JPanel panelFondo = new JPanel();
+        panelFondo.setBounds(0, 0, 1000, 680);
+        panelFondo.setBackground(Color.LIGHT_GRAY);
+        panelFondo.setLayout(null);
+
+        // JLabel del titulo
+        JLabel titulo = new JLabel("SISTEMA DE GESTION DE RANGOS MILITARES");
+        titulo.setBounds(380, 20, 500, 70);
+        titulo.setForeground(new Color(155,20,200));
+        titulo.setFont(new Font("Arial", Font.BOLD, 20));
+
+        // Panel con botones
         JPanel panelBotones = new JPanel();
-        panelBotones.setLayout(new GridLayout(1, 5));
+        panelBotones.setBounds(280, 90, 630, 450);
+        panelBotones.setLayout(new GridLayout(5, 1));
+        panelBotones.setBackground(Color.gray);
 
+        // Definicion de botones con sus caracteristicas
         JButton btnAgregar = new JButton("Agregar Soldado");
+        btnAgregar.setFont(new Font("Arial", Font.PLAIN, 14));
+        btnAgregar.setBackground(Color.DARK_GRAY);
+        btnAgregar.setForeground(Color.white);
+        btnAgregar.setBorder(null);
         JButton btnModificar = new JButton("Modificar Soldado");
+        btnModificar.setFont(new Font("Arial", Font.PLAIN, 14));
+        btnModificar.setBackground(Color.DARK_GRAY);
+        btnModificar.setForeground(Color.white);
+        btnModificar.setBorder(null);
         JButton btnEliminar = new JButton("Eliminar Soldado");
+        btnEliminar.setFont(new Font("Arial", Font.PLAIN, 14));
+        btnEliminar.setBackground(Color.DARK_GRAY);
+        btnEliminar.setForeground(Color.white);
+        btnEliminar.setBorder(null);
         JButton btnVerLista = new JButton("Ver Lista");
+        btnVerLista.setFont(new Font("Arial", Font.PLAIN, 14));
+        btnVerLista.setBackground(Color.DARK_GRAY);
+        btnVerLista.setForeground(Color.white);
+        btnVerLista.setBorder(null);
         JButton btnGestionar = new JButton("Gestionar Operaciones");
+        btnGestionar.setFont(new Font("Arial", Font.PLAIN, 14));
+        btnGestionar.setBackground(Color.DARK_GRAY);
+        btnGestionar.setForeground(Color.white);
+        btnGestionar.setBorder(null);
 
+        // Se agregan los botones al panel de botones
         panelBotones.add(btnAgregar);
         panelBotones.add(btnModificar);
         panelBotones.add(btnEliminar);
         panelBotones.add(btnVerLista);
         panelBotones.add(btnGestionar);
 
+        // Panel lateral
+        JPanel panelLateral = new JPanel();
+        panelLateral.setBounds(0, 0, 240, 680);
+        panelLateral.setLayout(null);
+        panelLateral.setBackground(new Color(155,20,200));
+
         // Tabla para mostrar soldados
-        JScrollPane scrollPane = new JScrollPane(table);
+        JScrollPane tablaDatos = new JScrollPane(table);
+        tablaDatos.setBounds(20, 90, 200, 450);
 
         // Agregar componentes a la ventana
-        add(panelBotones, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+        add(panelFondo);
+        panelFondo.add(titulo);
+        panelFondo.add(panelLateral);
+        panelLateral.add(tablaDatos);
+        panelFondo.add(panelBotones);
 
         // Configurar eventos de botones
         btnAgregar.addActionListener(e -> agregarSoldado());
@@ -61,14 +109,17 @@ public class AppGUI extends JFrame {
             String nombre = txtNombre.getText();
             String id = txtID.getText();
 
+            // Verificar si el soldado existe o no mediante el ID
             if (buscarID(id) != null) {
                 JOptionPane.showMessageDialog(this, "El ID ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
+            // Se crea el nuevo soldado y se almacena en el arrayList soldados
             Soldado soldado = new Soldado(nombre, id, "Soldado Raso");
             soldados.add(soldado);
             JOptionPane.showMessageDialog(this, "Soldado agregado correctamente.");
+            // Al final del proceso se actualiza la lista de soldados
             actualizarLista();
         }
     }
@@ -114,9 +165,10 @@ public class AppGUI extends JFrame {
     private void actualizarLista() {
         tableModel.setRowCount(0);
         for (Soldado soldado : soldados) {
-            tableModel.addRow(new Object[]{soldado.getId(), soldado.getNombre(), soldado.getRango()});
+            tableModel.addRow(new Object[]{soldado.getNombre(), soldado.getId()});
         }
     }
+
     //falta implementar
     private void gestionarOperaciones() {
         JOptionPane.showMessageDialog(this, "Gestión de operaciones aún no implementada.");
@@ -129,12 +181,5 @@ public class AppGUI extends JFrame {
             }
         }
         return null;
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            AppGUI app = new AppGUI();
-            app.setVisible(true);
-        });
     }
 }
