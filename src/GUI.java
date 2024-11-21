@@ -4,36 +4,43 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import militar.rangos.SoldadoRaso;
 import militar.soldados.Soldado;
 
 public class GUI extends JFrame {
     private final List<Soldado> soldados = new ArrayList<>();
-    private final DefaultTableModel tableModel = new DefaultTableModel(new String[]{"Nombre","ID"}, 0);
+    private final DefaultTableModel tableModel = new DefaultTableModel(new String[]{"Nombre","ID","Rango"}, 0);
     private final JTable table = new JTable(tableModel);
 
     public GUI() {
         // Configuración de la ventana principal
         setTitle("Sistema de Gestión de Rangos Militares");
-        setSize(1000, 680);
+        setSize(1200, 680);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLayout(null);
 
         //Panel de fondo
         JPanel panelFondo = new JPanel();
-        panelFondo.setBounds(0, 0, 1000, 680);
+        panelFondo.setBounds(0, 0, 1200, 680);
         panelFondo.setBackground(Color.LIGHT_GRAY);
         panelFondo.setLayout(null);
 
+        // JLabel imagen
+        JLabel imagenFondo = new JLabel();
+        imagenFondo.setBounds(0, 0, 1200, 680);
+        ImageIcon img = new ImageIcon("src/images/Camuflaje.jpg");
+        imagenFondo.setIcon(img);
+
         // JLabel del titulo
         JLabel titulo = new JLabel("SISTEMA DE GESTION DE RANGOS MILITARES");
-        titulo.setBounds(380, 20, 500, 70);
-        titulo.setForeground(new Color(155,20,200));
+        titulo.setBounds(520, 20, 500, 70);
+        titulo.setForeground(Color.white);
         titulo.setFont(new Font("Arial", Font.BOLD, 20));
 
         // Panel con botones
         JPanel panelBotones = new JPanel();
-        panelBotones.setBounds(280, 90, 630, 450);
+        panelBotones.setBounds(400, 90, 740, 450);
         panelBotones.setLayout(new GridLayout(5, 1));
         panelBotones.setBackground(Color.gray);
 
@@ -73,13 +80,13 @@ public class GUI extends JFrame {
 
         // Panel lateral
         JPanel panelLateral = new JPanel();
-        panelLateral.setBounds(0, 0, 240, 680);
+        panelLateral.setBounds(0, 0, 350, 680);
         panelLateral.setLayout(null);
-        panelLateral.setBackground(new Color(155,20,200));
+        panelLateral.setBackground(Color.DARK_GRAY);
 
         // Tabla para mostrar soldados
         JScrollPane tablaDatos = new JScrollPane(table);
-        tablaDatos.setBounds(20, 90, 200, 450);
+        tablaDatos.setBounds(20, 90, 300, 450);
 
         // Agregar componentes a la ventana
         add(panelFondo);
@@ -87,6 +94,7 @@ public class GUI extends JFrame {
         panelFondo.add(panelLateral);
         panelLateral.add(tablaDatos);
         panelFondo.add(panelBotones);
+        panelFondo.add(imagenFondo);
 
         // Configurar eventos de botones
         btnAgregar.addActionListener(e -> agregarSoldado());
@@ -116,8 +124,8 @@ public class GUI extends JFrame {
             }
 
             // Se crea el nuevo soldado y se almacena en el arrayList soldados
-            Soldado soldado = new Soldado(nombre, id, "Soldado Raso");
-            soldados.add(soldado);
+            SoldadoRaso raso = new SoldadoRaso(nombre, id);
+            soldados.add(raso);
             JOptionPane.showMessageDialog(this, "Soldado agregado correctamente.");
             // Al final del proceso se actualiza la lista de soldados
             actualizarLista();
@@ -165,7 +173,7 @@ public class GUI extends JFrame {
     private void actualizarLista() {
         tableModel.setRowCount(0);
         for (Soldado soldado : soldados) {
-            tableModel.addRow(new Object[]{soldado.getNombre(), soldado.getId()});
+            tableModel.addRow(new Object[]{soldado.getNombre(), soldado.getId(), soldado.getRango()});
         }
     }
 
