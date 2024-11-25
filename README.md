@@ -1,4 +1,4 @@
-# Miniproyecto1POE
+# MiniproyectoPOE
 
 Integrantes:
 Kevin Alexander Marín - 2160364
