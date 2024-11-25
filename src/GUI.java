@@ -180,16 +180,17 @@ public class GUI extends JFrame {
             }
     
             // Se crea un cuadro de diálogo para ingresar los nuevos datos
-            JTextField txtNombre = new JTextField(soldado.getNombre());
-            JTextField txtRango = new JTextField(soldado.getRango());
+            JTextField ingresarNombre = new JTextField(soldado.getNombre()); // Se crea un JTextField para modificar el nombre del soldado
+            JComboBox<String> ingresarRango = new JComboBox<>(new String[]{"Soldado Raso", "Teniente", "Capitán", "Coronel"}); // Se crea un JComboBox con los rangos
+            ingresarRango.setSelectedItem(soldado.getRango()); // El ComboBox tiene por defecto el rango actual del soldado que se quiere modificar
             Object[] message = {
-                    "Nombre:", txtNombre,
-                    "Rango:", txtRango,
-            };
-            int option = JOptionPane.showConfirmDialog(this, message, "Modificar Soldado", JOptionPane.OK_CANCEL_OPTION);
+                    "Nombre:", ingresarNombre,
+                    "Rango:", ingresarRango,
+            }; // Se crea un objeto con los componentes a mostrar
+            int option = JOptionPane.showConfirmDialog(this, message, "Modificar Soldado", JOptionPane.OK_CANCEL_OPTION); 
             if (option == JOptionPane.OK_OPTION) { // Si se presiona OK, se actualizan los datos del soldado
-                soldado.setNombre(txtNombre.getText());
-                soldado.setRango(txtRango.getText());
+                soldado.setNombre(ingresarNombre.getText()); // Se actualiza el nombre del soldado
+                soldado.setRango(ingresarRango.getSelectedItem().toString()); // Se actualiza el rango del soldado
                 JOptionPane.showMessageDialog(this, "Soldado modificado correctamente.");
                 actualizarLista();
             }
