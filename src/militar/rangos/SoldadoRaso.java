@@ -10,8 +10,8 @@ public class SoldadoRaso extends Soldado implements OperacionesMilitares{
     
     //aqui implementamos las cosas de el soldadoraso para que pueda almacenar, imprimir y modificar
     @Override
-    public void mostrarInformacion() {
-        super.mostrarInformacion();
+    public void mostrarInfoConsola() {
+        super.mostrarInfoConsola();
     }
 
     public void realizarAccion() {

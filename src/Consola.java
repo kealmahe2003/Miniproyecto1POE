@@ -91,7 +91,7 @@ public class Consola {
     
         if (soldado != null) {
             System.out.println("Soldado encontrado:");
-            soldado.mostrarInformacion();
+            soldado.mostrarInfoConsola();
             
             System.out.println("Ingrese el nuevo nombre del soldado (o presione Enter para no cambiar):");
             String nuevoNombre = scanner.nextLine();
@@ -130,7 +130,7 @@ public class Consola {
     public static void listaSoldados(){
         System.out.println("Soldados activos:");
         for(Soldado soldado : soldados){
-            soldado.mostrarInformacion();
+            soldado.mostrarInfoConsola();
         }
     }
 
@@ -163,7 +163,7 @@ public class Consola {
                     Soldado soldado = buscarID(id);
                     if (soldado != null) {
                         System.out.println("Soldado encontrado:");
-                        soldado.mostrarInformacion();
+                        soldado.mostrarInfoConsola();
     
                         String rango = soldado.getRango();
                         if (rango.equals("Soldado Raso")) {
@@ -213,7 +213,7 @@ public class Consola {
                     System.out.println("Ingrese la id del soldado para ver su estado: ");
                     String id = scanner.nextLine();
                     Soldado soldado = buscarID(id);
-                    soldado.mostrarInformacion();
+                    soldado.mostrarInfoConsola();
                     if (soldado != null) {
                         String rango = soldado.getRango();
                         System.out.println(soldado.getRango());

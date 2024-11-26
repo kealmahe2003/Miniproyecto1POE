@@ -11,17 +11,17 @@ public class GUI extends JFrame {
         //Listas de soldados, misiones y demas
         private final List<Soldado> soldados = new ArrayList<>();
         private final List<Soldado> soldadosBackup = new ArrayList<>();
-        private final List<Teniente> tenientes = new ArrayList<>();
-        private final List<Capitan> capitanes = new ArrayList<>();
-        private final List<Coronel> coroneles = new ArrayList<>();
+        private final List<Datos> datos = new ArrayList<>();
+        private final List<Rango> rangos = new ArrayList<>();
 
         //Tabla datos
         private final DefaultTableModel tableModel = new DefaultTableModel(new String[]{"Nombre","ID","Rango"}, 0);
         private final JTable table = new JTable(tableModel);    
 
         //Tabla Operaciones 
-        private final DefaultTableModel tablaOperaciones = new DefaultTableModel(new String[]{"Rango","Cualidad", "Mision"}, 0);
+        private final DefaultTableModel tablaOperaciones = new DefaultTableModel(new String[]{"ID","Rango", "Cualidad"}, 0);
         private final JTable tabla = new JTable(tablaOperaciones); 
+        
 
         public GUI() {
 
@@ -40,11 +40,20 @@ public class GUI extends JFrame {
             panelFondo.setLayout(null);
     
     
-            // JLabel imagen
-            JLabel imagenFondo = new JLabel();
-            imagenFondo.setBounds(0, 0, 1200, 680);
+            // Crear imagen
             ImageIcon img = new ImageIcon("src/images/Camuflaje.jpg");
-            imagenFondo.setIcon(img);
+
+
+            // JLabel imagen1
+            JLabel imagenFondo1 = new JLabel();
+            imagenFondo1.setBounds(1, 1, 1200, 680);
+            imagenFondo1.setIcon(img);
+
+
+            // JLabel imagen2
+            JLabel imagenFondo2 = new JLabel();
+            imagenFondo2.setBounds(1, 1, 1200, 680);
+            imagenFondo2.setIcon(img);
     
     
             // JLabel del titulo
@@ -53,6 +62,7 @@ public class GUI extends JFrame {
             titulo.setForeground(Color.white);
             titulo.setFont(new Font("Arial", Font.BOLD, 20));
             titulo.setHorizontalAlignment(SwingConstants.CENTER);
+
 
             // JLabel de la tabla de soldados
             JLabel listaSoldados = new JLabel("LISTA DE SOLDADOS");
@@ -129,52 +139,51 @@ public class GUI extends JFrame {
             // Agregar componentes a la ventana
             add(panelFondo);
             panelFondo.add(titulo);
-            panelFondo.add(imagenFondo);
             panelFondo.add(panelLateral);
             panelLateral.add(listaSoldados);
             panelLateral.add(tablaDatos);
             panelFondo.add(panelBotones);
             panelFondo.add(btnDeshacerCambios);
+            panelFondo.add(imagenFondo1);
 
-            //Interfaz Operaciones Militares
 
-            // Panel Fondo
-
+            // Panel Fondo Operaciones
             JPanel panelOperaciones = new JPanel();
             panelOperaciones.setLayout(null);
             panelOperaciones.setBounds(0, 0, 1200, 680);
             panelOperaciones.setBackground(Color.LIGHT_GRAY);
             panelOperaciones.setVisible(false);
             
-            // Titulo superior
 
-            JLabel titleLabel = new JLabel("Gestión de Operaciones Militares", SwingConstants.CENTER);
-            titleLabel.setBounds(520, 20, 500, 70);
-            titleLabel.setForeground(Color.white);
-            titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
-            titleLabel.setBorder(null);
-            titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            // Titulo Operaciones
+            JLabel tituloOper = new JLabel("GESTION DE OPERACIONES MILITARES", SwingConstants.CENTER);
+            tituloOper.setBounds(520, 20, 500, 70);
+            tituloOper.setForeground(Color.white);
+            tituloOper.setFont(new Font("Arial", Font.BOLD, 20));
+            tituloOper.setBorder(null);
+            tituloOper.setHorizontalAlignment(SwingConstants.CENTER);
             
-            // Titulo Tabla
 
-            JLabel tituloTablaO = new JLabel("Datos Soldados");
+            // Titulo Tabla
+            JLabel tituloTablaO = new JLabel("DATOS SOLDADOS");
             tituloTablaO.setBounds(20, 60, 300, 30);
             tituloTablaO.setForeground(Color.white);
             tituloTablaO.setFont(new Font("Arial", Font.BOLD, 20));
             tituloTablaO.setBorder(null);
             tituloTablaO.setHorizontalAlignment(SwingConstants.CENTER);
 
-            // Panel de botones de operaciones
 
+            // Panel de botones de operaciones
             JPanel panelBtnsOperaciones = new JPanel();
             panelBtnsOperaciones.setBounds(400, 90, 740, 450);
             panelBtnsOperaciones.setLayout(new GridLayout(3, 1));
             panelBtnsOperaciones.setBackground(Color.gray);
 
-            // Botones de operaciones
 
+            // Botones de operaciones
             JButton btnAsignarMision = new JButton("Asignar misión a un soldado");
             btnAsignarMision.setBounds(350, 50, 300, 43);
+            btnAsignarMision.setFont(new Font("Arial", Font.PLAIN, 14));
             btnAsignarMision.setBackground(Color.DARK_GRAY);
             btnAsignarMision.setForeground(Color.white);
             btnAsignarMision.setBorder(null);
@@ -182,6 +191,7 @@ public class GUI extends JFrame {
 
             JButton btnVerEstado = new JButton("Ver estado del soldado");
             btnVerEstado.setBounds(350, 110, 300, 43);
+            btnVerEstado.setFont(new Font("Arial", Font.PLAIN, 14));
             btnVerEstado.setBackground(Color.DARK_GRAY);
             btnVerEstado.setForeground(Color.white);
             btnVerEstado.setBorder(null);
@@ -189,41 +199,51 @@ public class GUI extends JFrame {
 
             JButton btnSalir = new JButton("Volver");
             btnSalir.setBounds(350, 150, 300, 43);
+            btnSalir.setFont(new Font("Arial", Font.PLAIN, 14));
             btnSalir.setBackground(Color.DARK_GRAY);
             btnSalir.setForeground(Color.white);
             btnSalir.setBorder(null);
             btnSalir.setHorizontalAlignment(SwingConstants.CENTER);
 
+
+            // Agregar botones a su panel correspondiente
             panelBtnsOperaciones.add(btnAsignarMision);
             panelBtnsOperaciones.add(btnVerEstado);
             panelBtnsOperaciones.add(btnSalir);
             
-            // Panel inferior
 
-            JPanel panelPosteriorOper = new JPanel();
-            panelPosteriorOper.setBounds(0, 0, 350, 680);
-            panelPosteriorOper.setLayout(null);
-            panelPosteriorOper.setBackground(Color.DARK_GRAY);
-            panelPosteriorOper.setVisible(false);
+            // Panel lateral operaciones
+            JPanel panelLateralOper = new JPanel();
+            panelLateralOper.setBounds(0, 0, 350, 680);
+            panelLateralOper.setLayout(null);
+            panelLateralOper.setBackground(Color.DARK_GRAY);
+            panelLateralOper.setVisible(false);
     
+
             // Tabla para informacion de operaciones y soldados
-
+            tabla.getTableHeader().setResizingAllowed(false);
+            tabla.getColumnModel().getColumn(0).setPreferredWidth(40); 
+            tabla.getColumnModel().getColumn(1).setPreferredWidth(70); 
+            tabla.getColumnModel().getColumn(2).setPreferredWidth(130); 
             JScrollPane tablaOperaciones = new JScrollPane(tabla);
-            tablaOperaciones.setBounds(20, 90,300 ,450);
+            tablaOperaciones.setBounds(10, 90,330,450);
 
+
+            // Agregar componentes al JFrame para la gestion de operaciones
             add(panelOperaciones);
-            panelOperaciones.add(titleLabel);
-            panelOperaciones.add(panelPosteriorOper);
+            panelOperaciones.add(tituloOper);
+            panelOperaciones.add(panelLateralOper);
             panelOperaciones.add(panelBtnsOperaciones);
-            panelOperaciones.add(imagenFondo);
-            panelPosteriorOper.add(tituloTablaO);
-            panelPosteriorOper.add(tablaOperaciones);
+            panelLateralOper.add(tituloTablaO);
+            panelLateralOper.add(tablaOperaciones);
+            panelOperaciones.add(imagenFondo2);
 
 
             // Configurar eventos de botones PRINCIPALES
             btnAgregar.addActionListener(e -> agregarSoldado());
             btnModificar.addActionListener(e -> modificarSoldado());
             btnEliminar.addActionListener(e -> eliminarSoldado());
+
 
             // Configurar eventos de botones OPERACIONES
             btnGestionar.addActionListener(e -> {
@@ -235,7 +255,7 @@ public class GUI extends JFrame {
 
                 //Mostrar menu Operaciones
                 panelOperaciones.setVisible(true);
-                panelPosteriorOper.setVisible(true);
+                panelLateralOper.setVisible(true);
                 
 
             });
@@ -249,12 +269,13 @@ public class GUI extends JFrame {
 
                 //Ocultar el menu Operaciones
                 panelOperaciones.setVisible(false);
-                panelPosteriorOper.setVisible(false);
+                panelLateralOper.setVisible(false);
 
             });
             btnDeshacerCambios.addActionListener(e -> deshacerCambios());
         }
     
+
         // Método para agregar un soldado
         private void agregarSoldado() {
             backupSoldados(); // Se realiza un backup de los soldados antes de agregar
@@ -270,7 +291,13 @@ public class GUI extends JFrame {
             if (option == JOptionPane.OK_OPTION) {
                 String nombre = txtNombre.getText();
                 String id = txtID.getText();
-    
+                
+                // Validar que el ID solo contenga números y tenga un máximo de 6 caracteres
+                if (!id.matches("\\d{1,5}")) {
+                    JOptionPane.showMessageDialog(this, "El ID debe contener solo números y tener un máximo de 6 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 // Verificar si el soldado existe o no mediante el ID
                 if (buscarID(id) != null) {
                     JOptionPane.showMessageDialog(this, "El ID ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -280,9 +307,12 @@ public class GUI extends JFrame {
                 // Se crea el nuevo soldado y se almacena en el arrayList soldados
                 SoldadoRaso raso = new SoldadoRaso(nombre, id);
                 soldados.add(raso);
+                Datos dato = new Datos(id, "Soldado Raso", "No tiene", "Sin asignar");
+                datos.add(dato);
                 JOptionPane.showMessageDialog(this, "Soldado agregado correctamente.");
                 // Al final del proceso se actualiza la lista de soldados
                 actualizarLista();
+                actualizarListaOperaciones();
             }
         }
     
@@ -293,6 +323,7 @@ public class GUI extends JFrame {
             // Se solicita el ID del soldado a modificar
             String id = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado a modificar:");
             Soldado soldado = buscarID(id);
+            Datos dato = buscarDatos(id);
     
             if (soldado == null) { // Si el soldado no existe, se muestra un mensaje de error
                 JOptionPane.showMessageDialog(this, "Soldado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -312,8 +343,10 @@ public class GUI extends JFrame {
                 // Si se presiona OK, se actualizan los datos del soldado
                 soldado.setNombre(ingresarNombre.getText()); // Se actualiza el nombre del soldado
                 soldado.setRango(ingresarRango.getSelectedItem().toString()); // Se actualiza el rango del soldado
+                dato.setRango(ingresarRango.getSelectedItem().toString()); // Se actualiza el rango del soldado para operaciones
                 JOptionPane.showMessageDialog(this, "Soldado modificado correctamente.");
                 actualizarLista();
+                actualizarListaOperaciones();
             }
         }
     
@@ -324,16 +357,18 @@ public class GUI extends JFrame {
             // Se solicita el ID del soldado a eliminar
             String id = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado a eliminar:");
             Soldado soldado = buscarID(id);
+            Datos dato = buscarDatos(id);
     
             if (soldado == null) { // Si el soldado no existe, se muestra un mensaje de error
                 JOptionPane.showMessageDialog(this, "Soldado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
     
-            // Se elimina el soldado del arrayList y se actualiza la lista
-            soldados.remove(soldado);
+            soldados.remove(soldado); // Se elimina el soldado de la lista de soldados
+            datos.remove(dato); // Se elimina el soldado de la lista de operaciones
             JOptionPane.showMessageDialog(this, "Soldado eliminado correctamente.");
             actualizarLista();
+            actualizarListaOperaciones();
         }
     
         // Método para actualizar la lista de soldados en la tabla
@@ -350,6 +385,15 @@ public class GUI extends JFrame {
             for (Soldado soldado : soldados) { // Se recorren los soldados y se compara el ID
                 if (soldado.getId().equals(id)) {
                     return soldado;
+                }
+            }
+            return null;
+        }
+
+        private Datos buscarDatos(String id){
+            for (Datos datos : datos) {
+                if (datos.getId().equals(id)){
+                    return datos;
                 }
             }
             return null;
@@ -382,7 +426,6 @@ public class GUI extends JFrame {
         }
 
 
-
         //Gestion Operaciones Militares
 
         //Asignar Mision
@@ -390,9 +433,9 @@ public class GUI extends JFrame {
             // Se ingresa la id del soldado
             String id = JOptionPane.showInputDialog(this, "Ingrese la ID del soldado:");
                     if (id != null && !id.isEmpty()) {
-                        Soldado soldado = buscarID(id);
-                        if (soldado != null) {
-                            String rango = soldado.getRango();
+                        Datos dato = buscarDatos(id);
+                        if (dato != null) {
+                            String rango = dato.getRango();
 
                             //Si es un soldado raso no se pueden asignar misiones
 
@@ -404,23 +447,21 @@ public class GUI extends JFrame {
                             else {
                                 switch (rango) {
                                     case "Teniente" -> {
-                                        String unidad = JOptionPane.showInputDialog(this, "Ingrese la unidad a la que pertenece:");
+                                        String unidad = JOptionPane.showInputDialog(this, "Ingrese la unidad a la que pertenece (en numeros):");
                                         String mision = JOptionPane.showInputDialog(this, "Ingrese la misión:");
                                         if (unidad != null && mision != null) {
-                                            Teniente teniente = new Teniente(unidad);
-                                            teniente.asignarMision(mision);
-                                            tenientes.add(teniente);
+                                            dato.setCualidad(("Unidad #" + unidad));
+                                            dato.setMision(mision);
                                             JOptionPane.showMessageDialog(this, "Misión: " + mision + " asignada al Teniente.");
-                                        }
+                                        }   
                                     }
-                                    case "Capitan" -> {
+                                    case "Capitán" -> {
                                         String cantidadSoldadosStr = JOptionPane.showInputDialog(this, "Ingrese la cantidad de soldados a su mando:");
                                         String mision = JOptionPane.showInputDialog(this, "Ingrese la misión:");
                                         if (cantidadSoldadosStr != null && mision != null) {
                                             int cantidadSoldados = Integer.parseInt(cantidadSoldadosStr);
-                                            Capitan capitan = new Capitan(cantidadSoldados);
-                                            capitan.asignarMision(mision);
-                                            capitanes.add(capitan);
+                                            dato.setCualidad(cantidadSoldados + " soldados a su mando");
+                                            dato.setMision(mision);
                                             JOptionPane.showMessageDialog(this, "Misión: " + mision + " asignada al Capitán.");
                                         }
                                     }
@@ -428,11 +469,9 @@ public class GUI extends JFrame {
                                         String estrategia = JOptionPane.showInputDialog(this, "Ingrese la estrategia a implementar:");
                                         String mision = JOptionPane.showInputDialog(this, "Ingrese la misión:");
                                         if (estrategia != null && mision != null) {
-                                            Coronel coronel = new Coronel(estrategia);
-                                            coronel.realizarAccion();
-                                            coronel.asignarMision(mision);
-                                            coroneles.add(coronel);
-                                            JOptionPane.showMessageDialog(this, "Misión: " + mision + " asignada al Coronel.");
+                                            dato.setCualidad(estrategia);
+                                            dato.setMision(mision);
+                                            JOptionPane.showMessageDialog(this, "El coronel esta implementando la estrategia " + estrategia + " para la mision " + mision + " asignada al Coronel.");
                                         } 
                                     }
                                 }
@@ -444,22 +483,45 @@ public class GUI extends JFrame {
                 actualizarListaOperaciones();
                 }
         
+
         // Aqui se mira el estado del solado que se muestra en un panel
         private void verEstado(){
             String id = JOptionPane.showInputDialog(this, "Ingrese la ID del soldado para ver su estado:");
             if (id != null && !id.isEmpty()) {
                 Soldado soldado = buscarID(id);
+                Datos dato = buscarDatos(id);
                     if (soldado != null) {
-                        String rango = soldado.getRango();
+                        String rango = dato.getRango();
                         switch (rango) {
                             //Switch para definir que estado mostrar
                             case "Soldado Raso" -> {
-                            SoldadoRaso raso = (SoldadoRaso) soldado;                                    
-                            raso.reportarEstado();
+                            String message = ("El Soldado " + id + " se encuentra activo.");                                  
+                            JOptionPane.showMessageDialog(this, message);
                             }
-                            case "Teniente" -> JOptionPane.showMessageDialog(this, tenientes.get(0).reportarEstado());
-                            case "Capitan" -> JOptionPane.showMessageDialog(this, capitanes.get(0).reportarEstado());
-                            case "Coronel" -> JOptionPane.showMessageDialog(this, coroneles.get(0).reportarEstado());
+                            case "Teniente" -> {
+                                if (dato.getCualidad().equals("No tiene") && dato.getMision().equals("Sin asignar")) {
+                                    JOptionPane.showMessageDialog(this, "El Teniente no tiene mision asignada.");
+                                } else {
+                                    String message = ("El Teniente " + id + " pertenece a la " + dato.getCualidad() + " y tiene la misión de " + dato.getMision() + ".");                                   
+                                    JOptionPane.showMessageDialog(this, message);
+                                }
+                            }
+                            case "Capitán" -> {
+                                if (dato.getCualidad().equals("No tiene") && dato.getMision().equals("Sin asignar")) {
+                                    JOptionPane.showMessageDialog(this, "El Capitán no tiene mision asignada.");
+                                } else {
+                                    String message = ("El Capitán " + id + " tiene a " + dato.getCualidad() + " y tiene la misión de " + dato.getMision() + ".");                                 
+                                    JOptionPane.showMessageDialog(this, message);
+                                }
+                            }
+                            case "Coronel" -> {
+                                if (dato.getCualidad().equals("No tiene") && dato.getMision().equals("Sin asignar")) {
+                                    JOptionPane.showMessageDialog(this, "El Coronel no tiene mision asignada.");
+                                } else {
+                                    String message = ("El Coronel " + id + " esta implementando la estrategia " + dato.getCualidad() + " para la misión " + dato.getMision() + ".");                                      
+                                    JOptionPane.showMessageDialog(this, message);
+                                }
+                            }
                         }
                     } else {
                         JOptionPane.showMessageDialog(this, "Soldado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -470,23 +532,8 @@ public class GUI extends JFrame {
         // Aquí se mira el estado de todos los soldados que se muestran en un panel
         private void actualizarListaOperaciones() {
             tablaOperaciones.setRowCount(0);
-            for (Soldado soldado : soldados) {
-                tablaOperaciones.addRow(new Object[]{soldado.getRango(), soldado.getId(), ""});
-            }
-        
-            // Añadir tenientes
-            for (Teniente teniente : tenientes) {
-                tablaOperaciones.addRow(new Object[]{"Teniente", teniente.getUnidad(), teniente.getMision()});
-            }
-        
-            // Añadir capitanes
-            for (Capitan capitan : capitanes) {
-                tablaOperaciones.addRow(new Object[]{"Capitan", capitan.getCantidadSoldados(), capitan.getMision()});
-            }
-        
-            // Añadir coroneles
-            for (Coronel coronel : coroneles) {
-                tablaOperaciones.addRow(new Object[]{"Coronel", coronel.getEstrategia(), coronel.getMision()});
+            for (Datos datos : datos) {
+                tablaOperaciones.addRow(new Object[]{datos.getId(), datos.getRango(), datos.getCualidad(), datos.getMision()});
             }
         }
 
