@@ -14,7 +14,7 @@ public class Soldado {
     }
     
     //la forma en que vamos a imprimir la informacion de el soldado
-    public void mostrarInformacion(){
+    public void mostrarInfoConsola(){
         System.out.println("----------------------------------------");
         System.out.println("Nombre del soldado: " + nombre);
         System.out.println("ID: " + id);

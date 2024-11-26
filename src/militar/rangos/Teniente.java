@@ -1,11 +1,11 @@
 package militar.rangos;
 import militar.Operaciones.OperacionesMilitares;
 
-//la clase teniente con las implementaciones de operacionesMilitares
+//La clase teniente hereda de Rango e implementa la interface OperacionesMilitares
 public class Teniente extends Rango implements OperacionesMilitares {
     private String unidad;
 
-    //se establece el rango de el teniente
+    //Se establece el rango teniente
     public Teniente(String unidad) {
         super(2);
         this.unidad = unidad;
