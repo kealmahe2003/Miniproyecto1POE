@@ -18,13 +18,13 @@ public class SoldadoRaso extends Soldado implements OperacionesMilitares{
         System.out.println("El Soldado Raso sigue las órdenes.");
     }
 
-    @Override 
+    @Override
     public void asignarMision(String mision){
         System.out.println("A el soldado " + getId() + " con nombre " + getNombre() + " se le ha asignado la mision de: \n"
         + mision);
     }
-
-    public void reportarEstado(){
-        System.out.println("El soldado " + getId() + " se encuentra activo");
+    @Override
+    public String reportarEstado(){
+        return ("El soldado " + getId() + " se encuentra activo");
     }
 }

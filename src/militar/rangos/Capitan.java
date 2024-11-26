@@ -24,13 +24,16 @@ public class Capitan extends Rango implements OperacionesMilitares {
     }
 
     @Override
-    public void reportarEstado(){
-        System.out.println("El Capitán lidera la misión con sus " + cantidadSoldadosBajoSuMando + " soldados.");
+    public String reportarEstado(){
         if(random.nextBoolean()) {
-            System.out.println("¡La misión fue exitosa!");
+            return ("El Capitán lidera la misión con sus " + cantidadSoldadosBajoSuMando + " soldados... " + "¡La misión fue exitosa!");
         } else {
             int soldadosPerdidos = random.nextInt(cantidadSoldadosBajoSuMando + 1);
-            System.out.println("La misión fracasó. Soldados perdidos: " + soldadosPerdidos + "/" + cantidadSoldadosBajoSuMando);
+            return ("El Capitán lidera la misión con sus " + cantidadSoldadosBajoSuMando + " soldados.." + "La misión fracasó. Soldados perdidos: " + soldadosPerdidos + "/" + cantidadSoldadosBajoSuMando);
         }
+    }
+
+    public Integer getCantidadSoldados() {
+        return cantidadSoldadosBajoSuMando;
     }
 }
