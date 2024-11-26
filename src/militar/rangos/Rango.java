@@ -24,9 +24,10 @@ public abstract class Rango {
         return mision;
     }
 
-    public void reportarEstado() {
-        System.out.println("Misión actual: " + mision);
+    public String reportarEstado() {
+        return ("Misión actual: " + mision);
     }
+
 
     public abstract void realizarAccion();
 }

@@ -25,9 +25,11 @@ public class Coronel extends Rango implements OperacionesMilitares {
     }
 
     @Override
-    public void reportarEstado() {
-        super.reportarEstado();
-        System.out.println("Estrategia actual: " + estrategia);
+    public String reportarEstado() {
+        return ("Estrategia actual: " + estrategia + "Mision: " + getMision());
     }
 
+    public String getEstrategia(){
+        return estrategia;
+    }
 }

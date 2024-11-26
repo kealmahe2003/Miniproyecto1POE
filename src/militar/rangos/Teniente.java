@@ -18,16 +18,15 @@ public class Teniente extends Rango implements OperacionesMilitares {
     }
 
     //si vamos a cambiar la mision del teniente, aqui se muestra como
-    @Override 
+    @Override
     public void asignarMision(String mision){
-        System.out.println("El Teniente de la unidad " + unidad + ", ha sido asignado a la mision de: " + mision);
+      System.out.println("El Teniente de la unidad " + unidad + ", ha sido asignado a la mision de: " + mision);
     }
 
     //esto es para imprimir el estado del teniente
     @Override
-    public void reportarEstado(){
-        System.out.println("El Teniente esta supervisando que las ordenes sean cumplidas a la perfeccion en la unidad " + unidad);
-        System.out.println("Ordenes acatadas a la perfeccion: " + random.nextInt(10));
+    public String reportarEstado(){
+        return ("El teniente de la unidad " + unidad + ", tiene la mision de: " + getMision());
     }
 
     public String getUnidad() {
