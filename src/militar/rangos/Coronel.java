@@ -15,8 +15,8 @@ public class Coronel extends Rango implements OperacionesMilitares {
 
     //las distintas acciones de el coronel para administrar las misiones de el
     @Override
-    public void realizarAccion() {
-        System.out.println("El Coronel está implementando la estrategia: " + estrategia);
+    public String realizarAccion() {
+       return ("El Coronel humilla a los soldaods con su rango, nivel y no sabemos que mas pero los humilla");
     }
 
     @Override
@@ -29,6 +29,9 @@ public class Coronel extends Rango implements OperacionesMilitares {
         return ("Estrategia actual: " + estrategia + "Mision: " + getMision());
     }
 
+    public String saludar(){
+        return ("¡Todo el batallon se inclina ante mi presencia!, solo escucha.");
+    }
     public String getEstrategia(){
         return estrategia;
     }

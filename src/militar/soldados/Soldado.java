@@ -4,6 +4,7 @@ public class Soldado {
     private String nombre;
     private String id;
     private String rango;
+    private int nivelRango;
     
 
     //constructor de soldado
@@ -11,6 +12,7 @@ public class Soldado {
         this.nombre = nombre;
         this.id = id;
         this.rango = rango;
+        this.nivelRango = 5;
     }
     
     //la forma en que vamos a imprimir la informacion de el soldado
@@ -20,6 +22,30 @@ public class Soldado {
         System.out.println("ID: " + id);
         System.out.println("Rango del soldado: " + rango);
         System.out.println("-----------------------------------------\n");
+    }
+
+    // Metodo saludar
+    public String saludar() {
+        //Si el nombre empieza y termina en la misma letra
+        if (nombre.length() > 0 && nombre.charAt(0) == nombre.charAt(nombre.length() - 1)) {
+            return "El soldado " + nombre + " saluda, es un chico chill y tranquilo.";
+        } else {
+            return "El soldado " + nombre + " saluda formalmente.";
+        }
+    } 
+
+    // Metodo patrullar
+    public String patrullar() {
+        return "El soldado " + nombre + " está patrullando.";
+    }
+    // Metodo de regaño
+    public String regañado() {
+        if (nivelRango > 1) {
+            nivelRango--;
+            return "El soldado " + nombre + " ha sido degradado. Su nuevo nivel de rango es: " + nivelRango;
+        } else {
+            return "El soldado " + nombre + " ha sido expulsado por no cumplir con su deber.";
+        }
     }
     
     // aqui se guarda los datos del soldado

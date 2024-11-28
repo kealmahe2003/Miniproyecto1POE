@@ -1,6 +1,11 @@
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import militar.rangos.*;
@@ -19,7 +24,7 @@ public class GUI extends JFrame {
         private final JTable table = new JTable(tableModel);    
 
         //Tabla Operaciones 
-        private final DefaultTableModel tablaOperaciones = new DefaultTableModel(new String[]{"ID","Rango", "Cualidad"}, 0);
+        private final DefaultTableModel tablaOperaciones = new DefaultTableModel(new String[]{"ID", "Rango", "Cualidad", "Mision"}, 0);
         private final JTable tabla = new JTable(tablaOperaciones); 
         
 
@@ -32,12 +37,49 @@ public class GUI extends JFrame {
             setResizable(false);
             setLayout(null);
     
+            
+            //Pantalla de carga
+
+            JPanel pantallaCarga = new JPanel();
+            pantallaCarga.setBounds(0, 0, 1200, 680);
+            pantallaCarga.setBackground(Color.LIGHT_GRAY);
+            pantallaCarga.setLayout(null);
+            pantallaCarga.setVisible(true);
+
+            JProgressBar barraProgreso = new JProgressBar();
+            barraProgreso.setValue(0);
+            barraProgreso.setStringPainted(true); 
+            barraProgreso.setPreferredSize(new Dimension(300, 30)); 
+            barraProgreso.setBackground(new Color(230, 230, 230)); 
+            barraProgreso.setForeground(new Color(76, 175, 80));
+            barraProgreso.setBorder(BorderFactory.createLineBorder(new Color(0, 128, 0), 2)); 
+            barraProgreso.setBorderPainted(true); 
+            barraProgreso.setBounds(350, 250, 500, 30);
+
+            //Carga de la barra de progreso
+            Timer timer = new Timer(25, e -> {
+                if (barraProgreso.getValue() < 100) {
+                    barraProgreso.setValue(barraProgreso.getValue() + 1);
+                }
+            });
+            timer.start();
     
+            JLabel mensaje = new JLabel("Cargando, por favor espere...", SwingConstants.CENTER);
+            mensaje.setFont(new Font("Arial", Font.PLAIN, 16));
+            mensaje.setBounds(350, 200, 500, 30);
+
+            add(pantallaCarga);
+            pantallaCarga.add(mensaje);
+            pantallaCarga.add(barraProgreso);
+
+
+
             //Panel de fondo
             JPanel panelFondo = new JPanel();
             panelFondo.setBounds(0, 0, 1200, 680);
             panelFondo.setBackground(Color.LIGHT_GRAY);
             panelFondo.setLayout(null);
+            panelFondo.setVisible(false);
     
     
             // Crear imagen
@@ -168,7 +210,7 @@ public class GUI extends JFrame {
             JLabel tituloTablaO = new JLabel("DATOS SOLDADOS");
             tituloTablaO.setBounds(20, 60, 300, 30);
             tituloTablaO.setForeground(Color.white);
-            tituloTablaO.setFont(new Font("Arial", Font.BOLD, 20));
+            tituloTablaO.setFont(new Font("Arial", Font.BOLD, 16));
             tituloTablaO.setBorder(null);
             tituloTablaO.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -176,7 +218,7 @@ public class GUI extends JFrame {
             // Panel de botones de operaciones
             JPanel panelBtnsOperaciones = new JPanel();
             panelBtnsOperaciones.setBounds(400, 90, 740, 450);
-            panelBtnsOperaciones.setLayout(new GridLayout(3, 1));
+            panelBtnsOperaciones.setLayout(new GridLayout(4, 1));
             panelBtnsOperaciones.setBackground(Color.gray);
 
 
@@ -197,6 +239,14 @@ public class GUI extends JFrame {
             btnVerEstado.setBorder(null);
             btnVerEstado.setHorizontalAlignment(SwingConstants.CENTER);
 
+            JButton btnRealizarAccion = new JButton("Acciones");
+            btnRealizarAccion.setBounds(350, 150, 300, 43);
+            btnRealizarAccion.setFont(new Font("Arial", Font.PLAIN, 14));
+            btnRealizarAccion.setBackground(Color.DARK_GRAY);
+            btnRealizarAccion.setForeground(Color.white);
+            btnRealizarAccion.setBorder(null);
+            btnRealizarAccion.setHorizontalAlignment(SwingConstants.CENTER);
+
             JButton btnSalir = new JButton("Volver");
             btnSalir.setBounds(350, 150, 300, 43);
             btnSalir.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -209,6 +259,7 @@ public class GUI extends JFrame {
             // Agregar botones a su panel correspondiente
             panelBtnsOperaciones.add(btnAsignarMision);
             panelBtnsOperaciones.add(btnVerEstado);
+            panelBtnsOperaciones.add(btnRealizarAccion);
             panelBtnsOperaciones.add(btnSalir);
             
 
@@ -239,6 +290,19 @@ public class GUI extends JFrame {
             panelOperaciones.add(imagenFondo2);
 
 
+            //Temporizador de la pantalla de carga antes de entrar a la App
+            //(artificial porque no demora nada cargando)
+            
+            Timer tiempo = new Timer(5000, e -> {
+                pantallaCarga.setVisible(false);
+                panelFondo.setVisible(true);
+            });
+            // Llamamos al timer para ejecutar la aplicacion
+            sonido(2);
+            tiempo.setRepeats(false);
+            tiempo.start();
+
+
             // Configurar eventos de botones PRINCIPALES
             btnAgregar.addActionListener(e -> agregarSoldado());
             btnModificar.addActionListener(e -> modificarSoldado());
@@ -257,10 +321,11 @@ public class GUI extends JFrame {
                 panelOperaciones.setVisible(true);
                 panelLateralOper.setVisible(true);
                 
-
             });
+
             btnAsignarMision.addActionListener(e -> asignarMision());
             btnVerEstado.addActionListener(e -> verEstado());
+            btnRealizarAccion.addActionListener(e -> realizarAccion());
             btnSalir.addActionListener(e -> {
                 
                 //Mostrar el menu Principal
@@ -272,8 +337,44 @@ public class GUI extends JFrame {
                 panelLateralOper.setVisible(false);
 
             });
-            btnDeshacerCambios.addActionListener(e -> deshacerCambios());
-        }
+
+            //Deshacer cambios
+            btnDeshacerCambios.addActionListener(e ->  deshacerCambios());
+
+            
+
+            // Mejora de los botones al hacer hover
+
+            //Lista con los botones existentes
+            JButton[] botones = {btnAgregar, btnAsignarMision, btnDeshacerCambios, btnEliminar,
+            btnGestionar, btnSalir, btnModificar, btnVerEstado, btnRealizarAccion};
+            
+            // Iteracion para aplicar a todos los botones
+            for (JButton boton : botones) {
+            hoverBotones(boton);}
+            }
+
+
+        // Void para gestionar el hover de los botones
+        private static void hoverBotones(JButton boton){
+            boton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    boton.setBackground(Color.GRAY); // Color al pasar el mouse
+                    sonido(3);
+                }
+    
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    boton.setBackground(Color.DARK_GRAY); // Color al salir el mouse
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    sonido(4); // Sonido al clickar
+                }
+            });}
+            
     
 
         // Método para agregar un soldado
@@ -307,7 +408,7 @@ public class GUI extends JFrame {
                 // Se crea el nuevo soldado y se almacena en el arrayList soldados
                 SoldadoRaso raso = new SoldadoRaso(nombre, id);
                 soldados.add(raso);
-                Datos dato = new Datos(id, "Soldado Raso", "No tiene", "Sin asignar");
+                Datos dato = new Datos(id ,"Soldado Raso", "No tiene", "Sin asignar", nombre);
                 datos.add(dato);
                 JOptionPane.showMessageDialog(this, "Soldado agregado correctamente.");
                 // Al final del proceso se actualiza la lista de soldados
@@ -342,6 +443,7 @@ public class GUI extends JFrame {
             if (option == JOptionPane.OK_OPTION){ 
                 // Si se presiona OK, se actualizan los datos del soldado
                 soldado.setNombre(ingresarNombre.getText()); // Se actualiza el nombre del soldado
+                dato.setNombre(ingresarNombre.getText()); // Se actualiza el nombre del soldado para operaciones
                 soldado.setRango(ingresarRango.getSelectedItem().toString()); // Se actualiza el rango del soldado
                 dato.setRango(ingresarRango.getSelectedItem().toString()); // Se actualiza el rango del soldado para operaciones
                 JOptionPane.showMessageDialog(this, "Soldado modificado correctamente.");
@@ -529,7 +631,139 @@ public class GUI extends JFrame {
                 }
         }
 
-        // Aquí se mira el estado de todos los soldados que se muestran en un panel
+        public void realizarAccion(){
+            String id = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado:");
+            Datos dato = buscarDatos(id);
+            String rango = dato.getRango();
+            
+            switch (rango) {
+
+                case "Soldado Raso" ->  {
+                    // Se crea un objeto del tipo SoldadoRaso con los datos del soldado
+                    SoldadoRaso soldado = new SoldadoRaso(dato.getNombre(), dato.getId());
+                    JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Patrullar", "Saludar"});
+                    Object[] message = {
+                        "Accion a realizar:", ingresarAccion,
+                     }; // Se crea un objeto con los componentes a mostrar
+                    int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
+                    if (option == JOptionPane.OK_OPTION){ 
+                        // Se muestra la accion patrullar
+                        if ("Patrullar".equals(ingresarAccion.getSelectedItem().toString())){
+                            JOptionPane.showMessageDialog(this, soldado.patrullar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                        }
+                        // Se muestra la accion saludar
+                        if("Saludar".equals(ingresarAccion.getSelectedItem().toString())){
+                            JOptionPane.showMessageDialog(this, soldado.saludar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                        }
+                    }else {
+                        return;
+                    }
+                }
+
+                case "Teniente" -> {
+                    // Se crea objeto del tipo Teniente con los datos del soldado
+                    Teniente teniente = new Teniente(dato.getCualidad());
+                    JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Regañar", "Supervisar"});
+                    Object[] message = {
+                        "Accion a realizar:", ingresarAccion,
+                     }; // Se crea un objeto con los componentes a mostrar
+                    int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
+                    if (option == JOptionPane.OK_OPTION){ 
+                        //Se realiza un sondeo
+                        if ("Sondear".equals(ingresarAccion.getSelectedItem().toString())){
+                            JOptionPane.showMessageDialog(this, teniente.realizarAccion(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                        }
+                        //Se regaña a un soldado
+                        if ("Regañar".equals(ingresarAccion.getSelectedItem().toString())){
+                            // Se pide la id del soldado a regañar
+                            String idSoldado = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado:");
+                                // Se busca si el soldado es un Soldado Raso
+                                Datos soldadoRaso = buscarDatos(idSoldado);
+                                // Si es un soldado raso entonces lo regañara
+                                if("Soldado Raso".equals(soldadoRaso.getRango())){
+                                JOptionPane.showMessageDialog(this, teniente.regañar(Integer.parseInt(idSoldado)), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                                // Por implementar: añadir la funcionalidad de bajar su nivel al momento de llamar a
+                                // .regañar() y eliminarlo de la lista si es necesario
+                                }
+                        }
+                    }else {
+                        return;
+                    }
+                }
+
+                case "Capitán" -> {
+                    // Se crea objeto del tipo Capitan con los datos del soldado
+                    Capitan capitan = new Capitan(Integer.parseInt(dato.getCualidad()));
+                    JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Humillar"});
+                    Object[] message = {
+                        "Accion a realizar:", ingresarAccion,
+                     }; // Se crea un objeto con los componentes a mostrar
+                    int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
+                    if (option == JOptionPane.OK_OPTION){ 
+                        // Se realiza un ataque
+                        if ("Atacar".equals(ingresarAccion.getSelectedItem().toString())){
+                            JOptionPane.showMessageDialog(this, capitan.realizarAccion(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                        }
+                    }else{
+                        return;
+                    }
+                }
+
+                case "Coronel" -> {
+                    // Se crea objeto del tipo Coronel con los datos del soldado
+                    Coronel coronel = new Coronel(dato.getCualidad());
+                    JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Saludar", "Humillar"});
+                    Object[] message = {
+                        "Accion a realizar:", ingresarAccion,
+                     }; // Se crea un objeto con los componentes a mostrar
+                    int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
+                    if (option == JOptionPane.OK_OPTION){ 
+                        // Se realiza un ataque
+                        if ("Humillar".equals(ingresarAccion.getSelectedItem().toString())){
+                            JOptionPane.showMessageDialog(this, coronel.realizarAccion(),  "Accion", JOptionPane.OK_CANCEL_OPTION);
+                        }
+                        if ("Saludar".equals(ingresarAccion.getSelectedItem().toString())){
+                            sonido(1);
+                            JOptionPane.showMessageDialog(this, coronel.saludar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                        }
+                    }else {
+                        return;
+                    }
+                }
+            }
+        }
+
+        //Manejo de sonidos en la interfaz
+        public static void sonido(int sonido) {
+            File archivoSonido = null;
+
+            //Switch para seleccionar el sonido segun sea el caso
+            switch (sonido) {
+                case 1 -> archivoSonido = new File("src/sounds/sonidoCoronel.wav");
+                case 2 -> archivoSonido = new File("src/sounds/sonidoInicio.wav");
+                case 3 -> archivoSonido = new File("src/sounds/sonidoHover.wav");
+                case 4 -> archivoSonido = new File("src/sounds/sonidoBoton.wav");
+                default -> {
+                    System.out.println("Sonido no válido.");
+                    return;
+                }
+            }
+            //Manejo de excepciones del sonido
+            try {
+                
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(archivoSonido);
+
+                // Crear el Clip y abrirlo
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioStream);
+
+                // Reproducir el audio una vez
+                clip.start();
+            }catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                System.out.println("Error al reproducir el sonido: " + ex.getMessage());
+            }
+        }
+
         private void actualizarListaOperaciones() {
             tablaOperaciones.setRowCount(0);
             for (Datos datos : datos) {
@@ -537,4 +771,5 @@ public class GUI extends JFrame {
             }
         }
 
+        
 }
