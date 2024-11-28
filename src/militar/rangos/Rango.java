@@ -47,5 +47,5 @@ public abstract class Rango {
         this.random = random;
     }
 
-    public abstract void realizarAccion();
+    public abstract String realizarAccion();
 }
