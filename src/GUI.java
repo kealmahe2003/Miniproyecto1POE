@@ -36,6 +36,7 @@ public class GUI extends JFrame {
             setDefaultCloseOperation(EXIT_ON_CLOSE);
             setResizable(false);
             setLayout(null);
+            setLocationRelativeTo(null);
     
             
             //Pantalla de carga
@@ -718,7 +719,7 @@ public class GUI extends JFrame {
                      }; // Se crea un objeto con los componentes a mostrar
                     int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
                     if (option == JOptionPane.OK_OPTION){ 
-                        // Se realiza un ataque
+                        // Se realiza una humillacion
                         if ("Humillar".equals(ingresarAccion.getSelectedItem().toString())){
                             JOptionPane.showMessageDialog(this, coronel.realizarAccion(),  "Accion", JOptionPane.OK_CANCEL_OPTION);
                         }

@@ -15,7 +15,7 @@ public class Capitan extends Rango implements OperacionesMilitares {
     // diversas tareas para que la gestion de las misiones funcione correctamente
     @Override
     public String realizarAccion() {
-        return ("El Capitán realiza un sondeo");
+        return ("El Capitán realiza un sondeo a sus: " + cantidadSoldadosBajoSuMando + " soldados");
     }
 
     @Override
