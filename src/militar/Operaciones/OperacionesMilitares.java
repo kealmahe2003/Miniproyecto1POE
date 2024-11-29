@@ -7,4 +7,6 @@ public interface OperacionesMilitares {
     void asignarMision(String Mision); //Asigna una misión al soldado.
     String reportarEstado(); //Reporta el estado actual del soldado en relación a la misión. 
 
+    String getMision();
+
 }
