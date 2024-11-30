@@ -1,11 +1,14 @@
 package militar.rangos;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
+
 public abstract class Rango {
 
     protected int nivel;
     private String mision;
     public Random random = new Random();
+    public String message;
 
     //Aqui se muestra el nivel de rango, que se adjunta a el nombre para saber quien esta mas arriba
     public Rango(int nivel) {
@@ -23,8 +26,13 @@ public abstract class Rango {
         return mision;
     }
 
-    public String reportarEstado() {
-        return ("Misión actual: " + mision);
+    public void reportarEstado() {
+        try {
+            message = ("El rango " + nivel + " tiene la misión de: " + getMision());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "No se ha podido reportar el estado.");
+            System.out.println(e);
+        }
     }
 
     public int getNivel() {
@@ -47,5 +55,8 @@ public abstract class Rango {
         this.random = random;
     }
 
-    public abstract String realizarAccion();
+    public void realizarAccion(String message) {
+        
+    }
+
 }
