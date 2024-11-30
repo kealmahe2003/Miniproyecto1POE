@@ -14,17 +14,15 @@ import militar.soldados.Soldado;
 public class GUI extends JFrame {
 
         //Listas de soldados, misiones y demas
-        private final List<Soldado> soldados = new ArrayList<>();
-        private final List<Soldado> soldadosBackup = new ArrayList<>();
-        private final List<Datos> datos = new ArrayList<>();
-        private final List<Rango> rangos = new ArrayList<>();
+        private final List<Persona> soldados = new ArrayList<>();
+        private final List<Persona> soldadosBackup = new ArrayList<>();
 
         //Tabla datos
         private final DefaultTableModel tableModel = new DefaultTableModel(new String[]{"Nombre","ID","Rango"}, 0);
         private final JTable table = new JTable(tableModel);    
 
         //Tabla Operaciones 
-        private final DefaultTableModel tablaOperaciones = new DefaultTableModel(new String[]{"ID", "Rango", "Cualidad", "Mision"}, 0);
+        private final DefaultTableModel tablaOperaciones = new DefaultTableModel(new String[]{"ID", "Rango", "Cualidad"}, 0);
         private final JTable tabla = new JTable(tablaOperaciones); 
         
 
@@ -65,13 +63,9 @@ public class GUI extends JFrame {
             });
             timer.start();
     
-            JLabel mensaje = new JLabel("Cargando, por favor espere...", SwingConstants.CENTER);
-            mensaje.setFont(new Font("Arial", Font.PLAIN, 16));
+            JLabel mensaje = new JLabel("CARGANDO, POR FAVOR ESPERE...", SwingConstants.CENTER);
+            mensaje.setFont(new Font("Arial", Font.BOLD, 16));
             mensaje.setBounds(350, 200, 500, 30);
-
-            add(pantallaCarga);
-            pantallaCarga.add(mensaje);
-            pantallaCarga.add(barraProgreso);
 
 
 
@@ -83,20 +77,29 @@ public class GUI extends JFrame {
             panelFondo.setVisible(false);
     
     
-            // Crear imagen
-            ImageIcon img = new ImageIcon("src/images/Camuflaje.jpg");
+            // Crear imagen1
+            ImageIcon img1 = new ImageIcon("src/images/Camuflaje.jpg");
+
+            // Crear imagen2
+            ImageIcon img2 = new ImageIcon("src/images/fondo-militar.jpg");
 
 
             // JLabel imagen1
             JLabel imagenFondo1 = new JLabel();
             imagenFondo1.setBounds(1, 1, 1200, 680);
-            imagenFondo1.setIcon(img);
+            imagenFondo1.setIcon(img1);
 
 
             // JLabel imagen2
             JLabel imagenFondo2 = new JLabel();
             imagenFondo2.setBounds(1, 1, 1200, 680);
-            imagenFondo2.setIcon(img);
+            imagenFondo2.setIcon(img1);
+
+
+            // JLabel imagen3
+            JLabel imagenFondo3 = new JLabel();
+            imagenFondo3.setBounds(1, 1, 1200, 680);
+            imagenFondo3.setIcon(img2);
     
     
             // JLabel del titulo
@@ -177,8 +180,19 @@ public class GUI extends JFrame {
             // Tabla para mostrar soldados
             JScrollPane tablaDatos = new JScrollPane(table);
             tablaDatos.setBounds(20, 90, 300, 450);
+            table.getTableHeader().setResizingAllowed(false);
+            table.getColumnModel().getColumn(0).setPreferredWidth(180); 
+            table.getColumnModel().getColumn(1).setPreferredWidth(40); 
+            table.getColumnModel().getColumn(2).setPreferredWidth(80); 
+            table.setDefaultEditor(Object.class, null);
     
     
+            add(pantallaCarga);
+            pantallaCarga.add(mensaje);
+            pantallaCarga.add(barraProgreso);
+            pantallaCarga.add(imagenFondo3);
+
+
             // Agregar componentes a la ventana
             add(panelFondo);
             panelFondo.add(titulo);
@@ -275,8 +289,9 @@ public class GUI extends JFrame {
             // Tabla para informacion de operaciones y soldados
             tabla.getTableHeader().setResizingAllowed(false);
             tabla.getColumnModel().getColumn(0).setPreferredWidth(40); 
-            tabla.getColumnModel().getColumn(1).setPreferredWidth(70); 
-            tabla.getColumnModel().getColumn(2).setPreferredWidth(130); 
+            tabla.getColumnModel().getColumn(1).setPreferredWidth(85); 
+            tabla.getColumnModel().getColumn(2).setPreferredWidth(130);
+            tabla.setDefaultEditor(Object.class, null);
             JScrollPane tablaOperaciones = new JScrollPane(tabla);
             tablaOperaciones.setBounds(10, 90,330,450);
 
@@ -380,134 +395,162 @@ public class GUI extends JFrame {
 
         // Método para agregar un soldado
         private void agregarSoldado() {
-            backupSoldados(); // Se realiza un backup de los soldados antes de agregar
-    
-            // Crear un cuadro de diálogo para ingresar datos
-            JTextField txtNombre = new JTextField();
-            JTextField txtID = new JTextField();
-            Object[] message = {
-                    "Nombre:", txtNombre,
-                    "ID:", txtID,
-            };
-            int option = JOptionPane.showConfirmDialog(this, message, "Agregar Soldado", JOptionPane.OK_CANCEL_OPTION);
-            if (option == JOptionPane.OK_OPTION) {
-                String nombre = txtNombre.getText();
-                String id = txtID.getText();
-                
-                // Validar que el ID solo contenga números y tenga un máximo de 6 caracteres
-                if (!id.matches("\\d{1,5}")) {
-                    JOptionPane.showMessageDialog(this, "El ID debe contener solo números y tener un máximo de 6 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+            try {
+                backupSoldados(); // Se realiza un backup de los soldados antes de agregar
+        
+                // Crear un cuadro de diálogo para ingresar datos
+                JTextField txtNombre = new JTextField();
+                JTextField txtID = new JTextField();
+                Object[] message = {
+                        "Nombre:", txtNombre,
+                        "ID:", txtID,
+                };
+                int option = JOptionPane.showConfirmDialog(this, message, "Agregar Soldado", JOptionPane.OK_CANCEL_OPTION);
+                if (option == JOptionPane.OK_OPTION) {
+                    String nombre = txtNombre.getText();
+                    String id = txtID.getText();
+                    
+                    // Validar que el ID solo contenga números y tenga un máximo de 6 caracteres
+                    if (!id.matches("\\d{1,5}")) {
+                        JOptionPane.showMessageDialog(this, "El ID debe contener solo números y tener un máximo de 6 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
 
-                // Verificar si el soldado existe o no mediante el ID
-                if (buscarID(id) != null) {
-                    JOptionPane.showMessageDialog(this, "El ID ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-    
-                // Se crea el nuevo soldado y se almacena en el arrayList soldados
-                SoldadoRaso raso = new SoldadoRaso(nombre, id);
-                soldados.add(raso);
-                Datos dato = new Datos(id ,"Soldado Raso", "No tiene", "Sin asignar", nombre);
-                datos.add(dato);
-                JOptionPane.showMessageDialog(this, "Soldado agregado correctamente.");
-                // Al final del proceso se actualiza la lista de soldados
-                actualizarLista();
-                actualizarListaOperaciones();
+                    // Verificar si el soldado existe o no mediante el ID
+                    if (buscarID(id) != null) {
+                        JOptionPane.showMessageDialog(this, "El ID ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+        
+                    // Se crea el nuevo soldado y se almacena en el arrayList soldados
+                    SoldadoRaso raso = new SoldadoRaso(nombre, id);
+                    soldados.add(raso);
+                    JOptionPane.showMessageDialog(this, "Soldado agregado correctamente.");
+                    // Al final del proceso se actualiza la lista de soldados
+                    actualizarLista();
+                    actualizarListaOperaciones();
+                } 
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al agregar el soldado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     
         // Método para modificar un soldado
         private void modificarSoldado() {
-            backupSoldados(); // Se realiza un backup de los soldados antes de modificar
-    
-            // Se solicita el ID del soldado a modificar
-            String id = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado a modificar:");
-            Soldado soldado = buscarID(id);
-            Datos dato = buscarDatos(id);
-    
-            if (soldado == null) { // Si el soldado no existe, se muestra un mensaje de error
-                JOptionPane.showMessageDialog(this, "Soldado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-    
-            // Se crea un cuadro de diálogo para ingresar los nuevos datos
-            JTextField ingresarNombre = new JTextField(soldado.getNombre()); // Se crea un JTextField para modificar el nombre del soldado
-            JComboBox<String> ingresarRango = new JComboBox<>(new String[]{"Soldado Raso", "Teniente", "Capitán", "Coronel"}); // Se crea un JComboBox con los rangos
-            ingresarRango.setSelectedItem(soldado.getRango()); // El ComboBox tiene por defecto el rango actual del soldado que se quiere modificar
-            Object[] message = {
-                    "Nombre:", ingresarNombre,
-                    "Rango:", ingresarRango,
-            }; // Se crea un objeto con los componentes a mostrar
-            int option = JOptionPane.showConfirmDialog(this, message, "Modificar Soldado", JOptionPane.OK_CANCEL_OPTION); 
-            if (option == JOptionPane.OK_OPTION){ 
-                // Si se presiona OK, se actualizan los datos del soldado
-                soldado.setNombre(ingresarNombre.getText()); // Se actualiza el nombre del soldado
-                dato.setNombre(ingresarNombre.getText()); // Se actualiza el nombre del soldado para operaciones
-                soldado.setRango(ingresarRango.getSelectedItem().toString()); // Se actualiza el rango del soldado
-                dato.setRango(ingresarRango.getSelectedItem().toString()); // Se actualiza el rango del soldado para operaciones
-                JOptionPane.showMessageDialog(this, "Soldado modificado correctamente.");
-                actualizarLista();
-                actualizarListaOperaciones();
+            try {
+                backupSoldados(); // Se realiza un backup de los soldados antes de modificar
+        
+                // Se solicita el ID del soldado a modificar
+                String id = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado a modificar:").trim();
+                Persona soldado = buscarID(id);
+        
+                // Si el id que se ingresa no existe, se muestra un mensaje de error
+                if (soldado == null) {
+                    JOptionPane.showMessageDialog(this, "Soldado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+        
+                // Se crea un cuadro de diálogo para ingresar los nuevos datos
+                JTextField ingresarNombre = new JTextField(soldado.getNombre()); // Se crea un JTextField para modificar el nombre del soldado
+                JComboBox<String> ingresarRango = new JComboBox<>(new String[]{"Soldado Raso", "Teniente", "Capitán", "Coronel"}); // Se crea un JComboBox con los rangos
+                ingresarRango.setSelectedItem(soldado.getRango()); // El ComboBox tiene por defecto el rango actual del soldado que se quiere modificar
+                Object[] message = {
+                        "Nombre:", ingresarNombre,
+                        "Rango:", ingresarRango,
+                }; // Se crea un objeto con los componentes a mostrar
+                int option = JOptionPane.showConfirmDialog(this, message, "Modificar Soldado", JOptionPane.OK_CANCEL_OPTION); 
+                if (option == JOptionPane.OK_OPTION){ 
+                    // Si se presiona OK, se actualizan los datos del soldado
+                    soldado.setNombre(ingresarNombre.getText()); // Se actualiza el nombre del soldado
+                    if(ingresarRango.getSelectedItem().toString().equals("Soldado Raso")){
+                        soldado.setRango("Soldado Raso");
+                    } else if(ingresarRango.getSelectedItem().toString().equals("Teniente")){
+                        soldados.remove(soldado);
+                        Teniente teniente = new Teniente("0");
+                        teniente.setId(id);
+                        teniente.setNombre(ingresarNombre.getText());
+                        teniente.setRango("Teniente");
+                        teniente.setCualidad("0");
+                        soldados.add(teniente);
+                    } else if(ingresarRango.getSelectedItem().toString().equals("Capitán")){
+                        soldados.remove(soldado);
+                        Capitan capitan = new Capitan(0);
+                        capitan.setId(id);
+                        capitan.setNombre(ingresarNombre.getText());
+                        capitan.setRango("Capitán");
+                        capitan.setCualidad("0");
+                        soldados.add(capitan);
+                    } else if(ingresarRango.getSelectedItem().toString().equals("Coronel")){
+                        soldados.remove(soldado);
+                        Coronel coronel = new Coronel(" ");
+                        coronel.setId(id);
+                        coronel.setNombre(ingresarNombre.getText());
+                        coronel.setRango("Coronel");
+                        coronel.setCualidad("Ninguna");
+                        soldados.add(coronel);
+                    }
+                    JOptionPane.showMessageDialog(this, "Soldado modificado correctamente.");
+                    actualizarLista();
+                    actualizarListaOperaciones();
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al modificar el soldado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     
         // Método para eliminar un soldado
         private void eliminarSoldado() {
-            backupSoldados(); // Se realiza un backup de los soldados antes de eliminar
-    
-            // Se solicita el ID del soldado a eliminar
-            String id = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado a eliminar:");
-            Soldado soldado = buscarID(id);
-            Datos dato = buscarDatos(id);
-    
-            if (soldado == null) { // Si el soldado no existe, se muestra un mensaje de error
-                JOptionPane.showMessageDialog(this, "Soldado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+            try {
+                backupSoldados(); // Se realiza un backup de los soldados antes de eliminar
+            
+                // Se solicita el ID del soldado a eliminar
+                String id = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado a eliminar:").trim();
+                Persona soldado = buscarID(id);
+        
+                if (soldado == null) { // Si el soldado no existe, se muestra un mensaje de error
+                    JOptionPane.showMessageDialog(this, "Soldado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            
+                soldados.remove(soldado); // Se elimina el soldado de la lista de soldados
+                JOptionPane.showMessageDialog(this, "Soldado eliminado correctamente.");
+                actualizarLista();
+                actualizarListaOperaciones();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el soldado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-    
-            soldados.remove(soldado); // Se elimina el soldado de la lista de soldados
-            datos.remove(dato); // Se elimina el soldado de la lista de operaciones
-            JOptionPane.showMessageDialog(this, "Soldado eliminado correctamente.");
-            actualizarLista();
-            actualizarListaOperaciones();
         }
-    
+        
         // Método para actualizar la lista de soldados en la tabla
         private void actualizarLista() {
             tableModel.setRowCount(0);
             // Se recorren los soldados y se agregan a la tabla
-            for (Soldado soldado : soldados) {
+            for (Persona soldado : soldados) {
                 tableModel.addRow(new Object[]{soldado.getNombre(), soldado.getId(), soldado.getRango()});
             }
         }
-    
+        
         // Método para buscar un soldado por su ID
-        private Soldado buscarID(String id) {
-            for (Soldado soldado : soldados) { // Se recorren los soldados y se compara el ID
-                if (soldado.getId().equals(id)) {
-                    return soldado;
+        private Persona buscarID(String id) {
+            try {
+                for (Persona soldado : soldados) {
+                    if (soldado.getId().trim().equals(id.trim())) {
+                        return soldado;
+                    }
                 }
+                return null;
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al buscar el soldado.", "Error", JOptionPane.ERROR_MESSAGE);
+                return null;
             }
-            return null;
-        }
-
-        private Datos buscarDatos(String id){
-            for (Datos datos : datos) {
-                if (datos.getId().equals(id)){
-                    return datos;
-                }
-            }
-            return null;
         }
     
         // Método para realizar un backup de los soldados
         private void backupSoldados() {
             soldadosBackup.clear(); // Se limpia el backup anterior
-            for (Soldado soldado : soldados) { // Se recorren los soldados y se agregan al backup
-                SoldadoRaso raso = new SoldadoRaso(soldado.getNombre(), soldado.getId());
-                soldadosBackup.add(raso);
+            for (Persona soldado : soldados) { // Se recorren los soldados y se agregan al backup
+                Persona soldadito = new Soldado(soldado.getNombre(), soldado.getId(), soldado.getRango(),soldado.getCualidad());
+                soldadosBackup.add(soldadito);
             }
         }
     
@@ -519,9 +562,9 @@ public class GUI extends JFrame {
             }
     
             soldados.clear(); // Se limpia la lista de soldados actual
-            for (Soldado soldado : soldadosBackup) {
-                SoldadoRaso raso = new SoldadoRaso(soldado.getNombre(), soldado.getId()); // Se recorren los soldados del backup y se agregan a la lista actual
-                soldados.add(raso);
+            for (Persona soldado : soldadosBackup) {
+                Persona soldadito = new Soldado(soldado.getNombre(), soldado.getId(), soldado.getRango(),soldado.getCualidad());
+                soldados.add(soldadito);
             }
     
             actualizarLista();
@@ -533,12 +576,13 @@ public class GUI extends JFrame {
 
         //Asignar Mision
         private void asignarMision(){
+            try {
             // Se ingresa la id del soldado
-            String id = JOptionPane.showInputDialog(this, "Ingrese la ID del soldado:");
+            String id = JOptionPane.showInputDialog(this, "Ingrese la ID del soldado:").trim();
                     if (id != null && !id.isEmpty()) {
-                        Datos dato = buscarDatos(id);
-                        if (dato != null) {
-                            String rango = dato.getRango();
+                        Persona soldado = buscarID(id);
+                        if (soldado != null) {
+                            String rango = soldado.getRango();
 
                             //Si es un soldado raso no se pueden asignar misiones
 
@@ -553,27 +597,28 @@ public class GUI extends JFrame {
                                         String unidad = JOptionPane.showInputDialog(this, "Ingrese la unidad a la que pertenece (en numeros):");
                                         String mision = JOptionPane.showInputDialog(this, "Ingrese la misión:");
                                         if (unidad != null && mision != null) {
-                                            dato.setCualidad(("Unidad #" + unidad));
-                                            dato.setMision(mision);
+                                            soldado.setCualidad(("Unidad #" + unidad));
+                                            soldado.asignarMision(mision);
                                             JOptionPane.showMessageDialog(this, "Misión: " + mision + " asignada al Teniente.");
                                         }   
                                     }
                                     case "Capitán" -> {
-                                        String cantidadSoldadosStr = JOptionPane.showInputDialog(this, "Ingrese la cantidad de soldados a su mando:");
+                                        String cantidadSoldados = JOptionPane.showInputDialog(this, "Ingrese la cantidad de soldados a su cargo:");
                                         String mision = JOptionPane.showInputDialog(this, "Ingrese la misión:");
-                                        if (cantidadSoldadosStr != null && mision != null) {
-                                            int cantidadSoldados = Integer.parseInt(cantidadSoldadosStr);
-                                            dato.setCualidad(cantidadSoldados + " soldados a su mando");
-                                            dato.setMision(mision);
+                                        if (cantidadSoldados != null && mision != null) {
+                                            ((Capitan) soldado).setCantSoldados(Integer.parseInt(cantidadSoldados));
+                                            String cantSoldadosStr = cantidadSoldados;
+                                            soldado.setCualidad(cantSoldadosStr + " soldados a su mando");
+                                            soldado.asignarMision(mision);
                                             JOptionPane.showMessageDialog(this, "Misión: " + mision + " asignada al Capitán.");
                                         }
-                                    }
+                                    }   
                                     case "Coronel" -> {
                                         String estrategia = JOptionPane.showInputDialog(this, "Ingrese la estrategia a implementar:");
                                         String mision = JOptionPane.showInputDialog(this, "Ingrese la misión:");
                                         if (estrategia != null && mision != null) {
-                                            dato.setCualidad(estrategia);
-                                            dato.setMision(mision);
+                                            soldado.setCualidad(estrategia);
+                                            soldado.asignarMision(mision);
                                             JOptionPane.showMessageDialog(this, "El coronel esta implementando la estrategia " + estrategia + " para la mision " + mision + " asignada al Coronel.");
                                         } 
                                     }
@@ -583,154 +628,211 @@ public class GUI extends JFrame {
                             JOptionPane.showMessageDialog(this, "Soldado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
+                actualizarLista();
                 actualizarListaOperaciones();
-                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al asignar la misión.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+                
         
 
         // Aqui se mira el estado del solado que se muestra en un panel
         private void verEstado(){
-            String id = JOptionPane.showInputDialog(this, "Ingrese la ID del soldado para ver su estado:");
-            if (id != null && !id.isEmpty()) {
-                Soldado soldado = buscarID(id);
-                Datos dato = buscarDatos(id);
-                    if (soldado != null) {
-                        String rango = dato.getRango();
-                        switch (rango) {
-                            //Switch para definir que estado mostrar
-                            case "Soldado Raso" -> {
-                            String message = ("El Soldado " + id + " se encuentra activo.");                                  
-                            JOptionPane.showMessageDialog(this, message);
-                            }
-                            case "Teniente" -> {
-                                if (dato.getCualidad().equals("No tiene") && dato.getMision().equals("Sin asignar")) {
-                                    JOptionPane.showMessageDialog(this, "El Teniente no tiene mision asignada.");
-                                } else {
-                                    String message = ("El Teniente " + id + " pertenece a la " + dato.getCualidad() + " y tiene la misión de " + dato.getMision() + ".");                                   
-                                    JOptionPane.showMessageDialog(this, message);
+            try {
+                String id = JOptionPane.showInputDialog(this, "Ingrese la ID del soldado para ver su estado:").trim();
+                if (id != null && !id.isEmpty()) {
+                    Persona soldado = buscarID(id);
+                        if (soldado != null) {
+                            String rango = soldado.getRango();
+                            switch (rango) {
+                                //Switch para definir que estado mostrar
+                                case "Soldado Raso" -> {
+                                String message = ("El Soldado Raso " + soldado.getNombre() + " " + id + " se encuentra activo.");                                  
+                                JOptionPane.showMessageDialog(this, message);
+                                }
+                                case "Teniente" -> {
+                                    if (soldado.getCualidad().equals("No tiene") && soldado.getMision().equals("Sin asignar")) {
+                                        JOptionPane.showMessageDialog(this, "El Teniente no tiene mision asignada.");
+                                    } else {
+                                        String message = ("El Teniente " + soldado.getNombre() + " " + id + " pertenece a " + soldado.getCualidad() + " y tiene la misión de " + soldado.getMision() + ".");                                   
+                                        JOptionPane.showMessageDialog(this, message);
+                                    }
+                                }
+                                case "Capitán" -> {
+                                    if (soldado.getCualidad().equals("No tiene") && soldado.getMision().equals("Sin asignar")) {
+                                        JOptionPane.showMessageDialog(this, "El Capitán no tiene mision asignada.");
+                                    } else {
+                                        String message = ("El Capitán " + soldado.getNombre() + " " + id + " tiene a " + soldado.getCualidad() + " y tiene la misión de " + soldado.getMision() + ".");                                 
+                                        JOptionPane.showMessageDialog(this, message);
+                                    }
+                                }
+                                case "Coronel" -> {
+                                    if (soldado.getCualidad().equals("No tiene") && soldado.getMision().equals("Sin asignar")) {
+                                        JOptionPane.showMessageDialog(this, "El Coronel no tiene mision asignada.");
+                                    } else {
+                                        String message = ("El Coronel " + soldado.getNombre() + " " + id + " esta implementando la estrategia " + soldado.getCualidad() + " para la misión " + soldado.getMision() + ".");                                      
+                                        JOptionPane.showMessageDialog(this, message);
+                                    }
                                 }
                             }
-                            case "Capitán" -> {
-                                if (dato.getCualidad().equals("No tiene") && dato.getMision().equals("Sin asignar")) {
-                                    JOptionPane.showMessageDialog(this, "El Capitán no tiene mision asignada.");
-                                } else {
-                                    String message = ("El Capitán " + id + " tiene a " + dato.getCualidad() + " y tiene la misión de " + dato.getMision() + ".");                                 
-                                    JOptionPane.showMessageDialog(this, message);
-                                }
-                            }
-                            case "Coronel" -> {
-                                if (dato.getCualidad().equals("No tiene") && dato.getMision().equals("Sin asignar")) {
-                                    JOptionPane.showMessageDialog(this, "El Coronel no tiene mision asignada.");
-                                } else {
-                                    String message = ("El Coronel " + id + " esta implementando la estrategia " + dato.getCualidad() + " para la misión " + dato.getMision() + ".");                                      
-                                    JOptionPane.showMessageDialog(this, message);
-                                }
-                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Soldado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Soldado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+                    } 
+                } catch (Exception e) { 
+                JOptionPane.showMessageDialog(this, "Error al ver el estado del soldado.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
 
         public void realizarAccion(){
-            String id = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado:");
-            Datos dato = buscarDatos(id);
-            String rango = dato.getRango();
+            try {
+                String id = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado:").trim();
+                Persona soldado = buscarID(id);
+                int nivel = soldado.getNivel();
             
-            switch (rango) {
+                switch (nivel) {
 
-                case "Soldado Raso" ->  {
-                    // Se crea un objeto del tipo SoldadoRaso con los datos del soldado
-                    SoldadoRaso soldado = new SoldadoRaso(dato.getNombre(), dato.getId());
-                    JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Patrullar", "Saludar"});
-                    Object[] message = {
-                        "Accion a realizar:", ingresarAccion,
-                     }; // Se crea un objeto con los componentes a mostrar
-                    int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
-                    if (option == JOptionPane.OK_OPTION){ 
-                        // Se muestra la accion patrullar
-                        if ("Patrullar".equals(ingresarAccion.getSelectedItem().toString())){
-                            JOptionPane.showMessageDialog(this, soldado.patrullar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                    case 1 ->  {
+                        // Se crea un objeto del tipo SoldadoRaso con los datos del soldado
+                        SoldadoRaso raso = new SoldadoRaso(soldado.getId(), soldado.getNombre());
+                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Patrullar", "Saludar"});
+                        Object[] message = {
+                            "Accion a realizar:", ingresarAccion,
+                        }; // Se crea un objeto con los componentes a mostrar
+                        int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
+                        if (option == JOptionPane.OK_OPTION){ 
+                            // Se muestra la accion patrullar
+                            if ("Patrullar".equals(ingresarAccion.getSelectedItem().toString())){
+                                JOptionPane.showMessageDialog(this, raso.patrullar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            }
+                            // Se muestra la accion saludar
+                            if("Saludar".equals(ingresarAccion.getSelectedItem().toString())){
+                                JOptionPane.showMessageDialog(this, raso.saludar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            }
+                        }else {
+                            return;
                         }
-                        // Se muestra la accion saludar
-                        if("Saludar".equals(ingresarAccion.getSelectedItem().toString())){
-                            JOptionPane.showMessageDialog(this, soldado.saludar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
-                        }
-                    }else {
-                        return;
                     }
-                }
 
-                case "Teniente" -> {
-                    // Se crea objeto del tipo Teniente con los datos del soldado
-                    Teniente teniente = new Teniente(dato.getCualidad());
-                    JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Regañar", "Supervisar"});
-                    Object[] message = {
-                        "Accion a realizar:", ingresarAccion,
-                     }; // Se crea un objeto con los componentes a mostrar
-                    int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
-                    if (option == JOptionPane.OK_OPTION){ 
-                        //Se realiza un sondeo
-                        if ("Sondear".equals(ingresarAccion.getSelectedItem().toString())){
-                            JOptionPane.showMessageDialog(this, teniente.realizarAccion(), "Accion", JOptionPane.OK_CANCEL_OPTION);
-                        }
-                        //Se regaña a un soldado
-                        if ("Regañar".equals(ingresarAccion.getSelectedItem().toString())){
-                            // Se pide la id del soldado a regañar
-                            String idSoldado = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado:");
-                                // Se busca si el soldado es un Soldado Raso
-                                Datos soldadoRaso = buscarDatos(idSoldado);
-                                // Si es un soldado raso entonces lo regañara
-                                if("Soldado Raso".equals(soldadoRaso.getRango())){
-                                JOptionPane.showMessageDialog(this, teniente.regañar(Integer.parseInt(idSoldado)), "Accion", JOptionPane.OK_CANCEL_OPTION);
-                                // Por implementar: añadir la funcionalidad de bajar su nivel al momento de llamar a
-                                // .regañar() y eliminarlo de la lista si es necesario
+                    case 2 -> {
+                        // Se crea objeto del tipo Teniente con los datos del soldado
+                        Teniente teniente = new Teniente(soldado.getCualidad());
+                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Regañar", "Supervisar"});
+                        Object[] message = {
+                            "Accion a realizar:", ingresarAccion,
+                        }; // Se crea un objeto con los componentes a mostrar
+                        int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
+                        if (option == JOptionPane.OK_OPTION){ 
+                            //Se realiza un sondeo
+                            if ("Sondear".equals(ingresarAccion.getSelectedItem().toString())){
+                                JOptionPane.showMessageDialog(this, teniente.realizarAccion(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            }
+                            //Se regaña a un soldado
+                            if ("Regañar".equals(ingresarAccion.getSelectedItem().toString())){
+                                // Se pide la id del soldado a regañar
+                                String idSoldado = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado:").trim();
+                                    // Se busca si el soldado es un Soldado Raso
+                                    Persona soldadito = buscarID(idSoldado);
+                                    // Si es un soldado raso entonces lo regañara
+                                    if(soldadito.getNivel() > 2){
+                                        JOptionPane.showMessageDialog(this, teniente.regañar(Integer.parseInt(idSoldado)), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                                        soldadito.regañado();
+                                        soldados.remove(buscarID(idSoldado));
+                                        actualizarLista();
+                                        actualizarListaOperaciones();
+                                    }
+                                    else{
+                                        JOptionPane.showMessageDialog(this, "El soldado no es un Soldado Raso.", "Error", JOptionPane.ERROR_MESSAGE);
+                                    }
                                 }
+                        }else {
+                            return;
                         }
-                    }else {
-                        return;
                     }
-                }
 
-                case "Capitán" -> {
-                    // Se crea objeto del tipo Capitan con los datos del soldado
-                    Capitan capitan = new Capitan(Integer.parseInt(dato.getCualidad()));
-                    JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Humillar"});
-                    Object[] message = {
-                        "Accion a realizar:", ingresarAccion,
-                     }; // Se crea un objeto con los componentes a mostrar
-                    int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
-                    if (option == JOptionPane.OK_OPTION){ 
-                        // Se realiza un ataque
-                        if ("Atacar".equals(ingresarAccion.getSelectedItem().toString())){
-                            JOptionPane.showMessageDialog(this, capitan.realizarAccion(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                    case 3 -> {
+                        // Se crea objeto del tipo Capitan con los datos del soldado
+                        String cantSoldadosStr = Integer.toString(((Capitan) soldado).getCantSoldados());
+                        Capitan capitan = new Capitan(Integer.parseInt(cantSoldadosStr));
+                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Regañar","Humillar"});
+                        Object[] message = {
+                            "Accion a realizar:", ingresarAccion,
+                         }; // Se crea un objeto con los componentes a mostrar
+                        int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
+                        if (option == JOptionPane.OK_OPTION){ 
+                            // Se realiza un ataque
+                            if ("Atacar".equals(ingresarAccion.getSelectedItem().toString())){
+                                JOptionPane.showMessageDialog(this, capitan.realizarAccion(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            }
+                            if ("Regañar".equals(ingresarAccion.getSelectedItem().toString())){
+                                // Se pide la id del soldado a regañar
+                                String idSoldado = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado:").trim();
+                                    // Se busca si el soldado es un Soldado de menor rango
+                                    Persona soldadito = buscarID(idSoldado);
+                                    // Si es un soldado de menor rango entonces lo regañara
+                                    if(soldadito.getNivel() > 3){
+                                        JOptionPane.showMessageDialog(this, capitan.regañar(Integer.parseInt(idSoldado)), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                                        soldadito.regañado();
+                                        if (soldadito.getNivel() == 1){
+                                            soldados.remove(buscarID(idSoldado));
+                                        }
+                                        actualizarLista();
+                                        actualizarListaOperaciones();
+                                    }
+                                    else{
+                                        JOptionPane.showMessageDialog(this, "El Capitan no puede regañar a alguien del mismo rango o mayor.", "Error", JOptionPane.ERROR_MESSAGE);
+                                    }
+                                }
+                        }else{
+                            return;
                         }
-                    }else{
-                        return;
                     }
-                }
 
-                case "Coronel" -> {
-                    // Se crea objeto del tipo Coronel con los datos del soldado
-                    Coronel coronel = new Coronel(dato.getCualidad());
-                    JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Saludar", "Humillar"});
-                    Object[] message = {
-                        "Accion a realizar:", ingresarAccion,
-                     }; // Se crea un objeto con los componentes a mostrar
-                    int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
-                    if (option == JOptionPane.OK_OPTION){ 
-                        // Se realiza una humillacion
-                        if ("Humillar".equals(ingresarAccion.getSelectedItem().toString())){
-                            JOptionPane.showMessageDialog(this, coronel.realizarAccion(),  "Accion", JOptionPane.OK_CANCEL_OPTION);
+                    case 4 -> {
+                        // Se crea objeto del tipo Coronel con los datos del soldado
+                        Coronel coronel = new Coronel(soldado.getCualidad());
+                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Saludar", "Regañar", "Humillar"});
+                        Object[] message = {
+                            "Accion a realizar:", ingresarAccion,
+                        }; // Se crea un objeto con los componentes a mostrar
+                        int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
+                        if (option == JOptionPane.OK_OPTION){ 
+                            if ("Regañar".equals(ingresarAccion.getSelectedItem().toString())){
+                                // Se pide la id del soldado a regañar
+                                String idSoldado = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado:").trim();
+                                    // Se busca si el soldado es un Soldado de menor rango
+                                    Persona soldadito = buscarID(idSoldado);
+                                    // Si es un soldado de menor rango entonces lo regañara
+                                    if(soldadito.getNivel() > 4){
+                                        JOptionPane.showMessageDialog(this, coronel.regañar(Integer.parseInt(idSoldado)), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                                        soldadito.regañado();
+                                        if (soldadito.getNivel() == 1){
+                                            soldados.remove(buscarID(idSoldado));
+                                        }
+                                        actualizarLista();
+                                        actualizarListaOperaciones();
+                                    }
+                                    else{
+                                        JOptionPane.showMessageDialog(this, "El Coronel no puede regañar a alguien del mismo rango.", "Error", JOptionPane.ERROR_MESSAGE);
+                                    }
+                            }
+                            // Se realiza una humillacion
+                            if ("Humillar".equals(ingresarAccion.getSelectedItem().toString())){
+                                JOptionPane.showMessageDialog(this, coronel.realizarAccion(),  "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            }
+                            if ("Saludar".equals(ingresarAccion.getSelectedItem().toString())){
+                                sonido(1);
+                                JOptionPane.showMessageDialog(this, coronel.saludar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            }
+                        }else {
+                            return;
                         }
-                        if ("Saludar".equals(ingresarAccion.getSelectedItem().toString())){
-                            sonido(1);
-                            JOptionPane.showMessageDialog(this, coronel.saludar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
-                        }
-                    }else {
-                        return;
                     }
                 }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al realizar la acción.", "Error", JOptionPane.ERROR_MESSAGE);
+                System.out.println(e);
             }
         }
 
@@ -766,9 +868,13 @@ public class GUI extends JFrame {
         }
 
         private void actualizarListaOperaciones() {
-            tablaOperaciones.setRowCount(0);
-            for (Datos datos : datos) {
-                tablaOperaciones.addRow(new Object[]{datos.getId(), datos.getRango(), datos.getCualidad(), datos.getMision()});
+            try {
+                tablaOperaciones.setRowCount(0);
+                for (Persona soldados : soldados) {
+                    tablaOperaciones.addRow(new Object[]{soldados.getId(), soldados.getRango(), soldados.getCualidad()});
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al actualizar la lista de operaciones.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
