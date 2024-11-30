@@ -557,19 +557,24 @@ public class GUI extends JFrame {
     
         // Método para deshacer los cambios realizados
         private void deshacerCambios() {
-            if (soldadosBackup.isEmpty()) { // Si no hay cambios para deshacer, se muestra un mensaje
-                JOptionPane.showMessageDialog(this, "No hay cambios para deshacer.", "Información", JOptionPane.INFORMATION_MESSAGE);
-                return;
+            try {
+                if (soldadosBackup.isEmpty()) { // Si no hay cambios para deshacer, se muestra un mensaje
+                    JOptionPane.showMessageDialog(this, "No hay cambios para deshacer.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+        
+                soldados.clear(); // Se limpia la lista de soldados actual
+                for (Persona soldado : soldadosBackup) {
+                    Persona soldadito = new Soldado(soldado.getNombre(), soldado.getId(), soldado.getRango(),soldado.getCualidad());
+                    soldados.add(soldadito);
+                }
+        
+                actualizarLista();
+                JOptionPane.showMessageDialog(this, "Cambios deshechos correctamente.");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al deshacer los cambios.", "Error", JOptionPane.ERROR_MESSAGE);
+                System.out.println(e);
             }
-    
-            soldados.clear(); // Se limpia la lista de soldados actual
-            for (Persona soldado : soldadosBackup) {
-                Persona soldadito = new Soldado(soldado.getNombre(), soldado.getId(), soldado.getRango(),soldado.getCualidad());
-                soldados.add(soldadito);
-            }
-    
-            actualizarLista();
-            JOptionPane.showMessageDialog(this, "Cambios deshechos correctamente.");
         }
 
 

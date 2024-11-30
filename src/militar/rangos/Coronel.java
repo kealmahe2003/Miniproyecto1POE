@@ -18,6 +18,7 @@ public class Coronel extends Rango implements OperacionesMilitares, Persona {
         this.estrategia = estrategia;
     }
 
+
     @Override
     public void realizarAccion(String message) {
         try {
@@ -46,6 +47,7 @@ public class Coronel extends Rango implements OperacionesMilitares, Persona {
             System.out.println(e);
         }
     }
+
 
     public void saludar(){
         try {
@@ -107,6 +109,7 @@ public class Coronel extends Rango implements OperacionesMilitares, Persona {
         return getEstrategia();
     }
 
+
     public void regañar(int id){
         try {
             message = ("El Coronel ha regañado a el soldado " + id);
@@ -117,6 +120,7 @@ public class Coronel extends Rango implements OperacionesMilitares, Persona {
         }
     }
 
+    
     // Metodo de regaño
     public void regañado() {
         try {

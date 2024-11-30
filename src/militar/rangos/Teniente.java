@@ -54,7 +54,8 @@ public class Teniente extends Rango implements OperacionesMilitares, Persona {
         }
     }
 
-    //esto es para imprimir el estado del teniente
+
+    // Esto es para imprimir el estado del teniente
     @Override
     public void reportarEstado(){
         try{
@@ -132,7 +133,8 @@ public class Teniente extends Rango implements OperacionesMilitares, Persona {
         }
     }
 
-    // metodo para asignar mision
+
+    // Metodo para asignar mision
     public void asignarMision(String mision){
         this.mision = mision;
     }

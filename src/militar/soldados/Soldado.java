@@ -21,6 +21,7 @@ public class Soldado implements Persona{
         this.rango = rango;
     }
         
+
     //la forma en que vamos a imprimir la informacion de el soldado
     public void mostrarInfo(){
         this.getId();
@@ -43,6 +44,7 @@ public class Soldado implements Persona{
         }
         
     } 
+
     
     // Metodo patrullar
     public String patrullar() {
@@ -63,6 +65,7 @@ public class Soldado implements Persona{
         }
     }
         
+    
     // aqui se guarda los datos del soldado
     public String getNombre() {
         return nombre;

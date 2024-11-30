@@ -17,11 +17,14 @@ public class SoldadoRaso extends Soldado implements OperacionesMilitares{
         super(nombre, id, "Soldado Raso", "Activo");
     }
     
+
     //aqui implementamos las cosas de el soldado raso para que pueda almacenar, imprimir y modificar su informacion
     public void mostrarInfo() {
         super.mostrarInfo();
     }
 
+
+    // Metodo para realizar una accion
     public void realizarAccion() {
         try {
             // genera un numero random del 1 al 3
@@ -55,7 +58,8 @@ public class SoldadoRaso extends Soldado implements OperacionesMilitares{
         }
     }
 
-    // metodo para asignar mision
+
+    // Metodo para asignar mision
     public void asignarMision(String mision){
         this.mision = mision;
     }

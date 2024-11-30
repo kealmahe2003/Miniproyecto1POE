@@ -21,6 +21,7 @@ public class Capitan extends Rango implements OperacionesMilitares, Persona {
         this.cantSoldados = cantSoldados;
     }
 
+
     // diversas tareas para que la gestion de las misiones funcione correctamente
     @Override
     public void realizarAccion(String message) {
@@ -47,6 +48,7 @@ public class Capitan extends Rango implements OperacionesMilitares, Persona {
             System.out.println(e);;
         }
     }
+
 
     @Override
     public void reportarEstado(){
@@ -113,6 +115,7 @@ public class Capitan extends Rango implements OperacionesMilitares, Persona {
         return Integer.toString(cantSoldados) + " soldados a su mando";
     }
 
+
     public void regañar(int id){
         try {
             message = ("El Capitán ha regañado a el soldado " + id);
@@ -122,6 +125,7 @@ public class Capitan extends Rango implements OperacionesMilitares, Persona {
             System.out.println(e);
         }
     }
+
 
     // Metodo de regaño
     public void regañado() {
@@ -136,6 +140,7 @@ public class Capitan extends Rango implements OperacionesMilitares, Persona {
         }
     }
 
+    
     // metodo para asignar mision
     public void asignarMision(String mision){
         this.mision = mision;
