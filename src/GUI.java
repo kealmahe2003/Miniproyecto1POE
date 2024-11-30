@@ -541,6 +541,7 @@ public class GUI extends JFrame {
                 return null;
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Error al buscar el soldado.", "Error", JOptionPane.ERROR_MESSAGE);
+                System.out.println(e);
                 return null;
             }
         }
@@ -696,19 +697,21 @@ public class GUI extends JFrame {
                     case 1 ->  {
                         // Se crea un objeto del tipo SoldadoRaso con los datos del soldado
                         SoldadoRaso raso = new SoldadoRaso(soldado.getId(), soldado.getNombre());
-                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Patrullar", "Saludar"});
+                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Trabajar", "Saludar"});
                         Object[] message = {
                             "Accion a realizar:", ingresarAccion,
                         }; // Se crea un objeto con los componentes a mostrar
                         int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
                         if (option == JOptionPane.OK_OPTION){ 
                             // Se muestra la accion patrullar
-                            if ("Patrullar".equals(ingresarAccion.getSelectedItem().toString())){
-                                JOptionPane.showMessageDialog(this, raso.patrullar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            if ("trabajar".equals(ingresarAccion.getSelectedItem().toString())){
+                                raso.realizarAccion();
+                                JOptionPane.showMessageDialog(this, message, "Accion", JOptionPane.OK_CANCEL_OPTION);
                             }
                             // Se muestra la accion saludar
                             if("Saludar".equals(ingresarAccion.getSelectedItem().toString())){
-                                JOptionPane.showMessageDialog(this, raso.saludar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                                raso.saludar();
+                                JOptionPane.showMessageDialog(this, message, "Accion", JOptionPane.OK_CANCEL_OPTION);
                             }
                         }else {
                             return;
@@ -718,15 +721,17 @@ public class GUI extends JFrame {
                     case 2 -> {
                         // Se crea objeto del tipo Teniente con los datos del soldado
                         Teniente teniente = new Teniente(soldado.getCualidad());
-                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Regañar", "Supervisar"});
-                        Object[] message = {
+                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Trabajar", "Regañar"});
+                        Object[] opciones = {
                             "Accion a realizar:", ingresarAccion,
                         }; // Se crea un objeto con los componentes a mostrar
-                        int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
+                        int option = JOptionPane.showConfirmDialog(this, opciones, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
+                        String message = "";
                         if (option == JOptionPane.OK_OPTION){ 
                             //Se realiza un sondeo
-                            if ("Sondear".equals(ingresarAccion.getSelectedItem().toString())){
-                                JOptionPane.showMessageDialog(this, teniente.realizarAccion(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            if ("Trabajar".equals(ingresarAccion.getSelectedItem().toString())){
+                                teniente.realizarAccion(message);
+                                JOptionPane.showMessageDialog(this, message, "Accion", JOptionPane.OK_CANCEL_OPTION);
                             }
                             //Se regaña a un soldado
                             if ("Regañar".equals(ingresarAccion.getSelectedItem().toString())){
@@ -736,7 +741,8 @@ public class GUI extends JFrame {
                                     Persona soldadito = buscarID(idSoldado);
                                     // Si es un soldado raso entonces lo regañara
                                     if(soldadito.getNivel() > 2){
-                                        JOptionPane.showMessageDialog(this, teniente.regañar(Integer.parseInt(idSoldado)), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                                        teniente.regañar(Integer.parseInt(idSoldado));
+                                        JOptionPane.showMessageDialog(this, opciones, "Accion", JOptionPane.OK_CANCEL_OPTION);
                                         soldadito.regañado();
                                         soldados.remove(buscarID(idSoldado));
                                         actualizarLista();
@@ -755,15 +761,17 @@ public class GUI extends JFrame {
                         // Se crea objeto del tipo Capitan con los datos del soldado
                         String cantSoldadosStr = Integer.toString(((Capitan) soldado).getCantSoldados());
                         Capitan capitan = new Capitan(Integer.parseInt(cantSoldadosStr));
-                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Regañar","Humillar"});
-                        Object[] message = {
+                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Trabajar","Regañar"});
+                        String message = "";
+                        Object[] opciones = {
                             "Accion a realizar:", ingresarAccion,
                          }; // Se crea un objeto con los componentes a mostrar
-                        int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
+                        int option = JOptionPane.showConfirmDialog(this, opciones, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
                         if (option == JOptionPane.OK_OPTION){ 
                             // Se realiza un ataque
-                            if ("Atacar".equals(ingresarAccion.getSelectedItem().toString())){
-                                JOptionPane.showMessageDialog(this, capitan.realizarAccion(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            if ("Trabajar".equals(ingresarAccion.getSelectedItem().toString())){
+                                capitan.realizarAccion(message);
+                                JOptionPane.showMessageDialog(this, message, "Accion", JOptionPane.OK_CANCEL_OPTION);
                             }
                             if ("Regañar".equals(ingresarAccion.getSelectedItem().toString())){
                                 // Se pide la id del soldado a regañar
@@ -772,7 +780,8 @@ public class GUI extends JFrame {
                                     Persona soldadito = buscarID(idSoldado);
                                     // Si es un soldado de menor rango entonces lo regañara
                                     if(soldadito.getNivel() > 3){
-                                        JOptionPane.showMessageDialog(this, capitan.regañar(Integer.parseInt(idSoldado)), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                                        capitan.regañar(Integer.parseInt(idSoldado));
+                                        JOptionPane.showMessageDialog(this, message, "Accion", JOptionPane.OK_CANCEL_OPTION);
                                         soldadito.regañado();
                                         if (soldadito.getNivel() == 1){
                                             soldados.remove(buscarID(idSoldado));
@@ -792,11 +801,11 @@ public class GUI extends JFrame {
                     case 4 -> {
                         // Se crea objeto del tipo Coronel con los datos del soldado
                         Coronel coronel = new Coronel(soldado.getCualidad());
-                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Saludar", "Regañar", "Humillar"});
-                        Object[] message = {
+                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Saludar", "Regañar", "Trabajar"});
+                        Object[] opciones = {
                             "Accion a realizar:", ingresarAccion,
                         }; // Se crea un objeto con los componentes a mostrar
-                        int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
+                        int option = JOptionPane.showConfirmDialog(this, opciones, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
                         if (option == JOptionPane.OK_OPTION){ 
                             if ("Regañar".equals(ingresarAccion.getSelectedItem().toString())){
                                 // Se pide la id del soldado a regañar
@@ -805,7 +814,8 @@ public class GUI extends JFrame {
                                     Persona soldadito = buscarID(idSoldado);
                                     // Si es un soldado de menor rango entonces lo regañara
                                     if(soldadito.getNivel() > 4){
-                                        JOptionPane.showMessageDialog(this, coronel.regañar(Integer.parseInt(idSoldado)), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                                        coronel.regañar(Integer.parseInt(idSoldado));
+                                        JOptionPane.showMessageDialog(this, opciones, "Accion", JOptionPane.OK_CANCEL_OPTION);
                                         soldadito.regañado();
                                         if (soldadito.getNivel() == 1){
                                             soldados.remove(buscarID(idSoldado));
@@ -818,12 +828,15 @@ public class GUI extends JFrame {
                                     }
                             }
                             // Se realiza una humillacion
-                            if ("Humillar".equals(ingresarAccion.getSelectedItem().toString())){
-                                JOptionPane.showMessageDialog(this, coronel.realizarAccion(),  "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            if ("Trabajar".equals(ingresarAccion.getSelectedItem().toString())){
+                                String message = "";
+                                coronel.realizarAccion(message);
                             }
                             if ("Saludar".equals(ingresarAccion.getSelectedItem().toString())){
                                 sonido(1);
-                                JOptionPane.showMessageDialog(this, coronel.saludar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                                String message = "";
+                                coronel.saludar();
+                                JOptionPane.showMessageDialog(this, message, "Accion", JOptionPane.OK_CANCEL_OPTION);
                             }
                         }else {
                             return;

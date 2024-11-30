@@ -1,5 +1,7 @@
 package militar.soldados;
 
+import javax.swing.JOptionPane;
+
 import militar.rangos.Persona;
 
 public class Soldado implements Persona{
@@ -27,13 +29,19 @@ public class Soldado implements Persona{
     }
     
     // Metodo saludar
-    public String saludar() {
-        //Si el nombre empieza y termina en la misma letra
-        if (nombre.length() > 0 && nombre.charAt(0) == nombre.charAt(nombre.length() - 1)) {
-            return "El soldado " + nombre + " saluda, es un chico chill y tranquilo.";
-        } else {
-            return "El soldado " + nombre + " saluda formalmente.";
+    public void saludar() {
+        try {
+            // Si el nombre empieza y termina en la misma letra
+            if (nombre.length() > 0 && nombre.charAt(0) == nombre.charAt(nombre.length() - 1)) {
+                message = ("El soldado " + nombre + " saluda, es un chico chill y tranquilo.");
+            } else {
+                message = ("El soldado " + nombre + " saluda formalmente.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "El Soldado no ha podido saludar.");
+            System.out.println(e);
         }
+        
     } 
     
     // Metodo patrullar

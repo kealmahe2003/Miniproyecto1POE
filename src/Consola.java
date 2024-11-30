@@ -195,8 +195,9 @@ public class Consola {
                             if(rango.equals("Coronel")){
                                 System.out.println("Ingrese la estrategia que va a implementar:");
                                 String estrategia = scanner.nextLine();
+                                String message = "";
                                 Coronel coronel = new Coronel(estrategia);
-                                coronel.realizarAccion();
+                                coronel.realizarAccion(message);
                                 System.out.println("Ingrese la mision a la que va a asignar la estrategia:");
                                 String mision = scanner.nextLine();
                                 coronel.asignarMision(mision);
