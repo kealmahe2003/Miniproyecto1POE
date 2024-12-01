@@ -1,5 +1,6 @@
 package militar.rangos;
 import javax.swing.JOptionPane;
+
 import militar.Operaciones.OperacionesMilitares;
 
 //La clase teniente hereda de Rango e implementa la interface OperacionesMilitares
@@ -9,6 +10,7 @@ public class Teniente extends Rango implements OperacionesMilitares, Persona {
     private String nombre;
     private String rango;
     private String mision;
+    private String message;
 
     //Se establece el rango teniente
     public Teniente(String unidad) {
@@ -26,14 +28,32 @@ public class Teniente extends Rango implements OperacionesMilitares, Persona {
     }
 
 
-    public String regañar(int id){
-        return ("El teniente de la unidad " + unidad + " ha regañado a el soldado " + id);
+    public void regañar(int id){
+        try {
+            message = ("El Teniente fue regañado por no cumplir con su deber. Por lo tanto será degradado");
+            return ;  
+
+        } catch (Exception e) {
+            message = ("Este soldado no ha podido ser regañado.");
+            return;
+        }
     }
 
-    //esto es para imprimir el estado del teniente
+
+    // Esto es para imprimir el estado del teniente
     @Override
-    public String reportarEstado(){
-        return ("El teniente de la unidad " + unidad + ", tiene la mision de: " + getMision());
+    public void reportarEstado(){
+        try{
+            if (random.nextBoolean()) {
+                message = ("El Teniente lidera la misión con su: " + unidad + "¡La misión fue exitosa!");
+            } else {
+                int soldadosPerdidos = random.nextInt(1);
+                message = ("El Teniente lidera la misión con su: " + unidad + "La misión fracasó. Soldados perdidos: " + soldadosPerdidos + "/" + unidad);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "El Teniente no ha podido reportar su estado.");
+            System.out.println(e);
+        }
     }
 
     public String getUnidad() {

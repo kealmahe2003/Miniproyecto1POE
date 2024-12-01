@@ -1,7 +1,11 @@
 package militar.rangos;
+
 import java.util.List;
 import java.util.Random;
 import javax.swing.JOptionPane;
+
+import javax.swing.JOptionPane;
+
 import militar.Operaciones.OperacionesMilitares;
 
 
@@ -12,26 +16,52 @@ public class Coronel extends Rango implements OperacionesMilitares, Persona {
     private String nombre;
     private String rango;
     private String mision;
+    private String message;
 
     public Coronel(String estrategia) {
         super(4); 
         this.estrategia = estrategia;
     }
 
-    //las distintas acciones de el coronel para administrar las misiones de el
+
     @Override
-    public String realizarAccion() {
-       return ("El Coronel humilla a los soldaods con su rango, nivel y no sabemos que mas pero los humilla");
+    public void realizarAccion(String message) {
+        try {
+            if(random.nextBoolean()) {
+                message = ("El Coronel ha decidido realizar una misión");
+            } else {
+                message = ("El Coronel ha decidido realizar una inspección");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "El Coronel no ha podido realizar ninguna acción.");
+        }
     }
 
 
     @Override
-    public String reportarEstado() {
-        return ("Estrategia actual: " + estrategia + "Mision: " + getMision());
+    public void reportarEstado() {
+        try {
+            if (random.nextBoolean()){
+                message = ("Gracias a la estrategia del Coronel, la misión fue exitosa.");
+            } else {
+                int soldadosPerdidos = random.nextInt(1000);
+                message = ("La estrategia del Coronel no funcionó, la misión fracasó. Soldados perdidos: " + soldadosPerdidos + "/" + 1000);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "El Coronel no ha podido reportar su estado.");
+            System.out.println(e);
+        }
     }
 
-    public String saludar(){
-        return ("¡Todo el batallon se inclina ante mi presencia!, solo escucha.");
+
+    public void saludar(){
+        try {
+            message = ("El Coronel ha saludado a sus soldados");
+            return;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "El Coronel no ha podido saludar a sus soldados.");
+            System.out.println(e);
+        }
     }
     
     
@@ -84,10 +114,18 @@ public class Coronel extends Rango implements OperacionesMilitares, Persona {
         return getEstrategia();
     }
 
-    public String regañar(int id){
-        return ("El Coronel " + nombre + " ha regañado a el soldado " + id + " de rango " + rango);
+
+    public void regañar(int id){
+        try {
+            message = ("El Coronel ha regañado a el soldado " + id);
+            return;
+        } catch (Exception e) {
+            message = ("El Coronel no ha podido regañar a el soldado " + id);
+            return;
+        }
     }
 
+    
     // Metodo de regaño
     @Override
     public void regañado() {
