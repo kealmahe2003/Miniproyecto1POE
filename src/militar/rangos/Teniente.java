@@ -1,4 +1,5 @@
 package militar.rangos;
+import javax.swing.JOptionPane;
 import militar.Operaciones.OperacionesMilitares;
 
 //La clase teniente hereda de Rango e implementa la interface OperacionesMilitares
@@ -18,7 +19,10 @@ public class Teniente extends Rango implements OperacionesMilitares, Persona {
     //aqui mostramos la mision del teniente por defecto
     @Override
     public String realizarAccion() {
-        return ("El Teniente supervisa a los soldados rasos de su area.");
+        int probabilidad = random.nextInt(50);
+        if (probabilidad%2 == 0){ return "1"; }
+        if (probabilidad%5 == 0){ return "2";}
+        else{ return "3"; }
     }
 
 
@@ -81,23 +85,25 @@ public class Teniente extends Rango implements OperacionesMilitares, Persona {
     }
 
     // Metodo de regaño
+    @Override
     public void regañado() {
         try {
             nivel = nivel - 1;
             String message = ("El Teniente fue regañado por no cumplir con su deber. Por lo tanto será degradado");
-            return ;  
+            JOptionPane.showConfirmDialog(null, message, "¡!", JOptionPane.OK_OPTION);
 
         } catch (Exception e) {
             String message = ("Este soldado no ha podido ser regañado.");
-            return;
+            JOptionPane.showConfirmDialog(null, message, "¡!", JOptionPane.OK_OPTION);
         }
     }
 
     // metodo para asignar mision
+    @Override
     public void asignarMision(String mision){
         this.mision = mision;
     }
-
+    @Override
     public String getMision(){
         return mision;
     }

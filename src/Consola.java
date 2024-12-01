@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 import militar.rangos.Capitan;
 import militar.rangos.Coronel;
 import militar.rangos.SoldadoRaso;
@@ -233,9 +232,7 @@ public class Consola {
                             Coronel coronel = coroneles.get(0);
                             coronel.reportarEstado();
                         }
-                    } else {
-                        System.out.println("Soldado no encontrado.");
-                    }
+                    } 
                 }
     
                 case 0 -> gestionando = false;

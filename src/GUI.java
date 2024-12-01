@@ -3,8 +3,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -430,7 +434,7 @@ public class GUI extends JFrame {
                     actualizarLista();
                     actualizarListaOperaciones();
                 } 
-            } catch (Exception e) {
+            } catch (HeadlessException e) {
                 JOptionPane.showMessageDialog(this, "Error al agregar el soldado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -460,40 +464,51 @@ public class GUI extends JFrame {
                 }; // Se crea un objeto con los componentes a mostrar
                 int option = JOptionPane.showConfirmDialog(this, message, "Modificar Soldado", JOptionPane.OK_CANCEL_OPTION); 
                 if (option == JOptionPane.OK_OPTION){ 
+
                     // Si se presiona OK, se actualizan los datos del soldado
                     soldado.setNombre(ingresarNombre.getText()); // Se actualiza el nombre del soldado
-                    if(ingresarRango.getSelectedItem().toString().equals("Soldado Raso")){
-                        soldado.setRango("Soldado Raso");
-                    } else if(ingresarRango.getSelectedItem().toString().equals("Teniente")){
-                        soldados.remove(soldado);
-                        Teniente teniente = new Teniente("0");
-                        teniente.setId(id);
-                        teniente.setNombre(ingresarNombre.getText());
-                        teniente.setRango("Teniente");
-                        teniente.setCualidad("0");
-                        soldados.add(teniente);
-                    } else if(ingresarRango.getSelectedItem().toString().equals("Capitán")){
-                        soldados.remove(soldado);
-                        Capitan capitan = new Capitan(0);
-                        capitan.setId(id);
-                        capitan.setNombre(ingresarNombre.getText());
-                        capitan.setRango("Capitán");
-                        capitan.setCualidad("0");
-                        soldados.add(capitan);
-                    } else if(ingresarRango.getSelectedItem().toString().equals("Coronel")){
-                        soldados.remove(soldado);
-                        Coronel coronel = new Coronel(" ");
-                        coronel.setId(id);
-                        coronel.setNombre(ingresarNombre.getText());
-                        coronel.setRango("Coronel");
-                        coronel.setCualidad("Ninguna");
-                        soldados.add(coronel);
+                    switch (ingresarRango.getSelectedItem().toString()) {
+
+                        case "Soldado Raso" -> soldado.setRango("Soldado Raso");
+
+                        case "Teniente" -> {
+                            soldados.remove(soldado);
+                            Teniente teniente = new Teniente("0");
+                            teniente.setId(id);
+                            teniente.setNombre(ingresarNombre.getText());
+                            teniente.setRango("Teniente");
+                            teniente.setCualidad("0");
+                            soldados.add(teniente);
+                        }
+
+                        case "Capitán" -> {
+                            soldados.remove(soldado);
+                            Capitan capitan = new Capitan(0);
+                            capitan.setId(id);
+                            capitan.setNombre(ingresarNombre.getText());
+                            capitan.setRango("Capitán");
+                            capitan.setCualidad("0");
+                            soldados.add(capitan);
+                        }
+
+                        case "Coronel" -> {
+                            soldados.remove(soldado);
+                            Coronel coronel = new Coronel(" ");
+                            coronel.setId(id);
+                            coronel.setNombre(ingresarNombre.getText());
+                            coronel.setRango("Coronel");
+                            coronel.setCualidad("Ninguna");
+                            soldados.add(coronel);
+                        }
+                        
+                        default -> {
+                        }
                     }
                     JOptionPane.showMessageDialog(this, "Soldado modificado correctamente.");
                     actualizarLista();
                     actualizarListaOperaciones();
                 }
-            } catch (Exception e) {
+            } catch (HeadlessException e) {
                 JOptionPane.showMessageDialog(this, "Error al modificar el soldado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -516,7 +531,7 @@ public class GUI extends JFrame {
                 JOptionPane.showMessageDialog(this, "Soldado eliminado correctamente.");
                 actualizarLista();
                 actualizarListaOperaciones();
-            } catch (Exception e) {
+            } catch (HeadlessException e) {
                 JOptionPane.showMessageDialog(this, "Error al eliminar el soldado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -630,7 +645,7 @@ public class GUI extends JFrame {
                     }
                 actualizarLista();
                 actualizarListaOperaciones();
-            } catch (Exception e) {
+            } catch (HeadlessException | NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Error al asignar la misión.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -680,7 +695,7 @@ public class GUI extends JFrame {
                             JOptionPane.showMessageDialog(this, "Soldado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } 
-                } catch (Exception e) { 
+                } catch (HeadlessException e) { 
                 JOptionPane.showMessageDialog(this, "Error al ver el estado del soldado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -689,14 +704,14 @@ public class GUI extends JFrame {
             try {
                 String id = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado:").trim();
                 Persona soldado = buscarID(id);
-                int nivel = soldado.getNivel();
+                String rango = soldado.getRango();
             
-                switch (nivel) {
+                switch (rango) {
 
-                    case 1 ->  {
+                    case "Soldado Raso" ->  {
                         // Se crea un objeto del tipo SoldadoRaso con los datos del soldado
                         SoldadoRaso raso = new SoldadoRaso(soldado.getId(), soldado.getNombre());
-                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Patrullar", "Saludar"});
+                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Patrullar", "Saludar", "Retirarse"});
                         Object[] message = {
                             "Accion a realizar:", ingresarAccion,
                         }; // Se crea un objeto con los componentes a mostrar
@@ -710,24 +725,118 @@ public class GUI extends JFrame {
                             if("Saludar".equals(ingresarAccion.getSelectedItem().toString())){
                                 JOptionPane.showMessageDialog(this, raso.saludar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
                             }
+                            if("Retirarse".equals(ingresarAccion.getSelectedItem().toString())){
+                                //Logica graciosa para retirarse
+                                int opcion = JOptionPane.showConfirmDialog(this, "¿Seguro se quiere retirar?", "¡!",JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                                if(opcion == JOptionPane.OK_OPTION){
+                                    opcion = JOptionPane.showConfirmDialog(this, "¿¿es realmente lo que quiere??", "¡!",JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                                    if(opcion == JOptionPane.OK_OPTION){
+                                        opcion = JOptionPane.showConfirmDialog(this, "¿¿¿¿¿?????", "¡!",JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);   
+                                        if(opcion == JOptionPane.OK_OPTION){
+
+                                            JOptionPane.showMessageDialog(this, raso.getNombre() + " se retiro... que perdedor 😴😴", "Accion", JOptionPane.OK_CANCEL_OPTION);
+                                            soldados.remove(buscarID(id));
+                                            actualizarLista();
+                                            actualizarListaOperaciones();
+
+                                        }else{ JOptionPane.showMessageDialog(this, "Excelente.", "¡!", JOptionPane.OK_CANCEL_OPTION); }
+                                    }else{ JOptionPane.showMessageDialog(this, "Perfecto.", "¡!", JOptionPane.OK_CANCEL_OPTION); }
+                                }else{ JOptionPane.showMessageDialog(this, "Bien.", "¡!", JOptionPane.OK_CANCEL_OPTION); }
+                            }
                         }else {
                             return;
                         }
                     }
 
-                    case 2 -> {
+                    case "Teniente" -> {
                         // Se crea objeto del tipo Teniente con los datos del soldado
                         Teniente teniente = new Teniente(soldado.getCualidad());
-                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Regañar", "Supervisar"});
+                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Regañar", "Supervisar", "???"});
                         Object[] message = {
                             "Accion a realizar:", ingresarAccion,
                         }; // Se crea un objeto con los componentes a mostrar
                         int option = JOptionPane.showConfirmDialog(this, message, "Realizar accion", JOptionPane.OK_CANCEL_OPTION); 
                         if (option == JOptionPane.OK_OPTION){ 
-                            //Se realiza un sondeo
-                            if ("Sondear".equals(ingresarAccion.getSelectedItem().toString())){
-                                JOptionPane.showMessageDialog(this, teniente.realizarAccion(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            //Se realiza una accion segun un numero aleatorio en la clase teniente
+                            if ("Supervisar".equals(ingresarAccion.getSelectedItem().toString())){
+                                String p = teniente.realizarAccion();
+                                System.out.println(p);
+                                switch (p){
+                                    case "1" -> {
+                                        ExecutorService executor = Executors.newFixedThreadPool(10); // Numero de hilos para ejecutar las ventanas a la vez
+                                        JOptionPane.showConfirmDialog(this, "Los soldados se revelaron contra el teniente", "Oh no",JOptionPane.OK_OPTION, JOptionPane.ERROR_MESSAGE);
+                                        int offset = 50;
+                                        for (int i = 1; i <= 10; i++) { 
+                                            int j = i;
+                                            //se ejecutan los hilos para mostrar los paneles
+                                            executor.submit(() -> {
+                                                Toolkit.getDefaultToolkit().beep(); //sonido de error de windows
+                                                JOptionPane pane = new JOptionPane("Fin", JOptionPane.ERROR_MESSAGE);
+                                                JDialog dialog = pane.createDialog("''?¡?¿¿¿¿''");
+                                                dialog.setLocation(500 + offset*j, 250 + offset*j); 
+                                                dialog.setVisible(true);
+                                            });
+                                            try {
+                                                // tiempo entre cada panel
+                                                Thread.sleep(100);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                        executor.shutdown(); // Detener LOS hilos una vez completado
+                                        dispose();
+                                    }
+                                    case "2" -> { 
+                                        // Seleccionar un ganador aleatorio de la lista de soldados
+                                            Persona ganador = soldados.get(new java.util.Random().nextInt(soldados.size()));
+                                            String nombreGanador = ganador.getNombre(); // Obtener el nombre del ganador
+
+                                            //Se reproduce un sonido para anunciar al ganador
+                                            sonido(5);
+                                            Timer tiempo = new Timer(7000, e -> {
+                                                // Mensaje Ganador
+                                                JOptionPane.showMessageDialog(this, "¡Competencia terminada! El ganador es: " + nombreGanador, "Ganador", JOptionPane.PLAIN_MESSAGE);
+                                            });
+                                            tiempo.setRepeats(false);
+                                            tiempo.start();
+                                            // Inicio competencia
+                                            JOptionPane.showMessageDialog(this, "El Teniente ha organizado una competencia de resistencia entre los soldados. ¡Que gane el mejor!",
+                                            "Competencia", JOptionPane.INFORMATION_MESSAGE);       
+                                    }
+                                    
+                                    case "3" -> {
+                                        //un constructor para mostrar el texto
+                                        StringBuilder resultado = new StringBuilder("El Teniente está inspeccionando las mochilas de los soldados!\n\n");
+                                        int contador = 0;   
+                                        // Cada soldado tiene objetos aleatorios en su mochila
+                                        String[] objetos = {"una cantimplora", "un mapa viejo", "un queso mordido", "un libro de estrategia", "un muñeco"};
+                                        for (Persona soldadito : soldados) {
+
+                                            //Solo mirara los primeros 10 soldados rasos de la lista
+                                            
+                                            if(contador == 10){
+                                                break;
+                                            }
+                                            //Si es un soldado raso aparecera en la lista, si no entonces no lo tomara en cuenta
+                                            if("Soldado Raso".equals(soldadito.getRango())){
+                                                int indiceObjeto = new java.util.Random().nextInt(objetos.length);
+                                                resultado.append(soldadito.getNombre())
+                                                        .append(" lleva en su mochila: ")
+                                                        .append(objetos[indiceObjeto])
+                                                        .append(".\n");
+                                                contador += 1;
+                                            }
+                                        }
+
+                                        // Mostrar el resultado
+                                        JOptionPane.showMessageDialog(this, resultado.toString(), "Inspección de Mochilas", JOptionPane.INFORMATION_MESSAGE);
+                                }
+                                    default -> {
+                                        break;
+                                    }
+                                }
                             }
+                        }
                             //Se regaña a un soldado
                             if ("Regañar".equals(ingresarAccion.getSelectedItem().toString())){
                                 // Se pide la id del soldado a regañar
@@ -746,16 +855,22 @@ public class GUI extends JFrame {
                                         JOptionPane.showMessageDialog(this, "El soldado no es un Soldado Raso.", "Error", JOptionPane.ERROR_MESSAGE);
                                     }
                                 }
-                        }else {
-                            return;
-                        }
+                            if("???".equals(ingresarAccion.getSelectedItem().toString())){
+                                try {
+                                    String url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"; 
+                                    Desktop desktop = Desktop.getDesktop();
+                                    desktop.browse(new URI(url));
+                                } catch (IOException | URISyntaxException e) {
+                                    JOptionPane.showMessageDialog(this, "Te salvaste esta vez...", "Error", JOptionPane.ERROR_MESSAGE);
+                                }
+                            }else { return; }
                     }
 
-                    case 3 -> {
+                    case  "Capitán" ->  {
                         // Se crea objeto del tipo Capitan con los datos del soldado
                         String cantSoldadosStr = Integer.toString(((Capitan) soldado).getCantSoldados());
                         Capitan capitan = new Capitan(Integer.parseInt(cantSoldadosStr));
-                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Regañar","Humillar"});
+                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Regañar","Atacar", "Mision"});
                         Object[] message = {
                             "Accion a realizar:", ingresarAccion,
                          }; // Se crea un objeto con los componentes a mostrar
@@ -765,6 +880,9 @@ public class GUI extends JFrame {
                             if ("Atacar".equals(ingresarAccion.getSelectedItem().toString())){
                                 JOptionPane.showMessageDialog(this, capitan.realizarAccion(), "Accion", JOptionPane.OK_CANCEL_OPTION);
                             }
+                            if ("Mision".equals(ingresarAccion.getSelectedItem().toString())){
+                                capitan.planificarMision();
+                            }
                             if ("Regañar".equals(ingresarAccion.getSelectedItem().toString())){
                                 // Se pide la id del soldado a regañar
                                 String idSoldado = JOptionPane.showInputDialog(this, "Ingrese el ID del soldado:").trim();
@@ -772,7 +890,7 @@ public class GUI extends JFrame {
                                     Persona soldadito = buscarID(idSoldado);
                                     // Si es un soldado de menor rango entonces lo regañara
                                     if(soldadito.getNivel() > 3){
-                                        JOptionPane.showMessageDialog(this, capitan.regañar(Integer.parseInt(idSoldado)), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                                        JOptionPane.showMessageDialog(this, capitan.regañar(Integer.parseInt(idSoldado)), "Accion", JOptionPane.OK_OPTION);
                                         soldadito.regañado();
                                         if (soldadito.getNivel() == 1){
                                             soldados.remove(buscarID(idSoldado));
@@ -789,10 +907,10 @@ public class GUI extends JFrame {
                         }
                     }
 
-                    case 4 -> {
+                    case "Coronel" -> {
                         // Se crea objeto del tipo Coronel con los datos del soldado
                         Coronel coronel = new Coronel(soldado.getCualidad());
-                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Saludar", "Regañar", "Humillar"});
+                        JComboBox<String> ingresarAccion = new JComboBox<>(new String[]{"Saludar", "Regañar", "Desfile", "Premio o Castigo"});
                         Object[] message = {
                             "Accion a realizar:", ingresarAccion,
                         }; // Se crea un objeto con los componentes a mostrar
@@ -818,19 +936,22 @@ public class GUI extends JFrame {
                                     }
                             }
                             // Se realiza una humillacion
-                            if ("Humillar".equals(ingresarAccion.getSelectedItem().toString())){
-                                JOptionPane.showMessageDialog(this, coronel.realizarAccion(),  "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            if ("Desfile".equals(ingresarAccion.getSelectedItem().toString())){
+                                coronel.organizarDesfile();
                             }
                             if ("Saludar".equals(ingresarAccion.getSelectedItem().toString())){
                                 sonido(1);
                                 JOptionPane.showMessageDialog(this, coronel.saludar(), "Accion", JOptionPane.OK_CANCEL_OPTION);
+                            }
+                            if("Premio o Castigo".equals(ingresarAccion.getSelectedItem())){
+                                coronel.premioOcastigo(soldados);
                             }
                         }else {
                             return;
                         }
                     }
                 }
-            } catch (Exception e) {
+            } catch (HeadlessException | NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Error al realizar la acción.", "Error", JOptionPane.ERROR_MESSAGE);
                 System.out.println(e);
             }
@@ -846,6 +967,7 @@ public class GUI extends JFrame {
                 case 2 -> archivoSonido = new File("src/sounds/sonidoInicio.wav");
                 case 3 -> archivoSonido = new File("src/sounds/sonidoHover.wav");
                 case 4 -> archivoSonido = new File("src/sounds/sonidoBoton.wav");
+                case 5 -> archivoSonido = new File("src/sounds/Competencia.wav");
                 default -> {
                     System.out.println("Sonido no válido.");
                     return;
