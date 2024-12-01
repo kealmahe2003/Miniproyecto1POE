@@ -1,4 +1,9 @@
 package militar.rangos;
+
+import java.util.List;
+import java.util.Random;
+import javax.swing.JOptionPane;
+
 import javax.swing.JOptionPane;
 
 import militar.Operaciones.OperacionesMilitares;
@@ -122,22 +127,70 @@ public class Coronel extends Rango implements OperacionesMilitares, Persona {
 
     
     // Metodo de regaño
+    @Override
     public void regañado() {
         try {
             nivel = nivel - 1;
-            message = ("El Coronel fue regañado por no cumplir con su deber. Por lo tanto será degradado");
-            return ;  
+            String message = ("El Coronel fue regañado por no cumplir con su deber. Por lo tanto será degradado");
+            JOptionPane.showConfirmDialog(null, message, "¡!", JOptionPane.OK_OPTION);
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "El Coronel no ha podido regañar a el soldado.");
+            String message = ("Este soldado no ha podido ser regañado.");
+            JOptionPane.showConfirmDialog(null, message, "¡!", JOptionPane.OK_OPTION);
         }
     }
 
+    public void organizarDesfile() {
+    String mensaje = """
+        El Coronel ha ordenado un desfile sorpresa:
+        - Soldados marchando en formacion impecable 
+        - Banda militar tocando canciones patrioticas 
+        - Tropas llenas de entusiasmo 
+        """;
+    // Aqui me entere que se podian usar JOption pane en las clases porque pensaba
+    //que tocaba extender de JFrame xd, muy tarde porque ya hice todo lo de teniente
+    JOptionPane.showMessageDialog(null, mensaje, "Desfile Militar", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void premioOcastigo(List<Persona> soldados) {
+    // Seleccionar un soldado aleatorio
+    int index = new Random().nextInt(soldados.size());
+    Persona soldadoSeleccionado = soldados.get(index);
+    
+    // Generar una decisión aleatoria (1 = recompensa, 2 = castigo)
+    int decision = new Random().nextInt(2) + 1;
+
+    String mensaje;
+    switch (decision) {
+        case 1 -> {
+            mensaje = "El Coronel ha decidido recompensar a " + soldadoSeleccionado.getNombre() +
+                      " con un permiso especial para visitar a su familia.";
+        }
+        case 2 -> {
+            int castigo = new Random().nextInt(3); // Elegir un castigo aleatorio
+            String castigoDescripcion = switch (castigo) {
+                case 0 -> "limpiar las barracas";
+                case 1 -> "correr 10 kilometros bajo el sol";
+                case 2 -> "entrenar toda la noche en el patio";
+                default -> "realizar tareas administrativas aburridas";
+            };
+            mensaje = "El Coronel ha decidido castigar a " + soldadoSeleccionado.getNombre() +
+                      ". El castigo asignado es: " + castigoDescripcion;
+        }
+        default -> mensaje = "El Coronel está indeciso. Ninguna acción será tomada.";
+    }
+    
+    JOptionPane.showMessageDialog(null, mensaje, "Decisión del Coronel", JOptionPane.INFORMATION_MESSAGE);
+}
+
+
     // metodo para asignar mision
+    @Override
     public void asignarMision(String mision){
         this.mision = mision;
     }
 
+    @Override
     public String getMision(){
         return mision;
     }

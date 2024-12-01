@@ -20,26 +20,11 @@ public class Teniente extends Rango implements OperacionesMilitares, Persona {
 
     //aqui mostramos la mision del teniente por defecto
     @Override
-    public void realizarAccion(String message) {
-        try {
-            // Genera un numero random del 1 al 3
-            int randomNum = random.nextInt(3) + 1;
-            // Si el numero es 1, realiza un sondeo
-            if (randomNum == 1) {
-                message = ("El Teniente realiza un sondeo a sus: " + unidad);
-            }
-            // Si el numero es 2, realiza una inspeccion
-            if (randomNum == 2) {
-                message = ("El Teniente realiza una inspección a sus: " + unidad);
-            }
-            // Si el numero es 3, realiza ordena a su unidad
-            if (randomNum == 3) {
-                message = ("El Teniente realiza una orden a su: " + unidad);
-            }  
-        } catch (Exception e) {
-
-            return;
-        }
+    public String realizarAccion() {
+        int probabilidad = random.nextInt(50);
+        if (probabilidad%2 == 0){ return "1"; }
+        if (probabilidad%5 == 0){ return "2";}
+        else{ return "3"; }
     }
 
 
@@ -120,25 +105,25 @@ public class Teniente extends Rango implements OperacionesMilitares, Persona {
     }
 
     // Metodo de regaño
+    @Override
     public void regañado() {
         try {
             nivel = nivel - 1;
-            message = ("El Teniente fue regañado por no cumplir con su deber. Por lo tanto será degradado");
-            return ;  
+            String message = ("El Teniente fue regañado por no cumplir con su deber. Por lo tanto será degradado");
+            JOptionPane.showConfirmDialog(null, message, "¡!", JOptionPane.OK_OPTION);
 
         } catch (Exception e) {
-            message = ("Este soldado no ha podido ser regañado.");
-            JOptionPane.showMessageDialog(null, message);
-            System.out.println(e);
+            String message = ("Este soldado no ha podido ser regañado.");
+            JOptionPane.showConfirmDialog(null, message, "¡!", JOptionPane.OK_OPTION);
         }
     }
 
-
-    // Metodo para asignar mision
+    // metodo para asignar mision
+    @Override
     public void asignarMision(String mision){
         this.mision = mision;
     }
-
+    @Override
     public String getMision(){
         return mision;
     }

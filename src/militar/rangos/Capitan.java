@@ -1,6 +1,8 @@
 package militar.rangos;
 import javax.swing.JOptionPane;
 
+import javax.swing.JTextField;
+
 import militar.Operaciones.OperacionesMilitares;
 
 
@@ -66,6 +68,40 @@ public class Capitan extends Rango implements OperacionesMilitares, Persona {
         
     }
 
+    public void planificarMision() {
+        // Panel para ingresar detalles de la mision
+        JTextField objetivo = new JTextField();
+        JTextField estrategia = new JTextField();
+        Object[] message = {
+            "Ingrese el objetivo del rescate:", objetivo,
+            "Ingrese la estrategia:", estrategia
+        };
+
+        //Se muestra el mensaje  de la mision
+        int option = JOptionPane.showConfirmDialog(null, message, "Planificacion de Rescate", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            //se evalua si se ingresaron los datos
+            String objetivoTexto = objetivo.getText();
+            String estrategiaTexto = estrategia.getText();
+            if (objetivoTexto.isEmpty() || estrategiaTexto.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Debe ingresar todos los datos.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Resultado de la mision
+            String mensaje;
+            int resultado = random.nextInt(2); // 0: exito, 1: fracaso
+            if (resultado == 0) {
+                mensaje = "La mision de rescate fue un exito. El objetivo \n" + objetivoTexto + "\n ha sido asegurado!";
+            }
+            else {
+                mensaje =  "La mision de rescate fallo. La estrategia \n" + estrategiaTexto + "\n no funcionó.";
+            }
+                
+            JOptionPane.showMessageDialog(null, mensaje, "Resultado", JOptionPane.OK_OPTION);
+        }
+    }
+
     public int getCantSoldados() {
         return cantSoldados;
     }
@@ -128,24 +164,27 @@ public class Capitan extends Rango implements OperacionesMilitares, Persona {
 
 
     // Metodo de regaño
+    @Override
     public void regañado() {
         try {
             nivel = nivel - 1;
-            message = ("El Capitán fue regañado por no cumplir con su deber. Por lo tanto será degradado");
-            return ;  
+            String message = ("El Capitán fue regañado por no cumplir con su deber. Por lo tanto será degradado");
+            JOptionPane.showConfirmDialog(null, message, "¡!", JOptionPane.OK_OPTION);
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Este soldado no ha podido ser regañado.");
-            System.out.println(e);
+            String message = ("Este soldado no ha podido ser regañado.");
+            JOptionPane.showConfirmDialog(null, message, "¡!", JOptionPane.OK_OPTION);
         }
     }
 
     
     // metodo para asignar mision
+    @Override
     public void asignarMision(String mision){
         this.mision = mision;
     }
 
+    @Override
     public String getMision(){
         return mision;
     }

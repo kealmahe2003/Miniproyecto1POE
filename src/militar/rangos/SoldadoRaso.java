@@ -19,6 +19,7 @@ public class SoldadoRaso extends Soldado implements OperacionesMilitares{
     
 
     //aqui implementamos las cosas de el soldado raso para que pueda almacenar, imprimir y modificar su informacion
+    @Override
     public void mostrarInfo() {
         super.mostrarInfo();
     }
@@ -58,12 +59,13 @@ public class SoldadoRaso extends Soldado implements OperacionesMilitares{
         }
     }
 
-
-    // Metodo para asignar mision
+    // metodo para asignar mision
+    @Override
     public void asignarMision(String mision){
         this.mision = mision;
     }
 
+    @Override
     public String getMision(){
         return mision;
     }
