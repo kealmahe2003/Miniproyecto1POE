@@ -27,6 +27,5 @@ public interface Persona {
     public String getMision();
 
     public void regañado();
-    
 
 }
