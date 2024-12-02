@@ -1,6 +1,5 @@
 package militar.rangos;
 import javax.swing.JOptionPane;
-
 import militar.Operaciones.OperacionesMilitares;
 
 //La clase teniente hereda de Rango e implementa la interface OperacionesMilitares
@@ -10,7 +9,6 @@ public class Teniente extends Rango implements OperacionesMilitares, Persona {
     private String nombre;
     private String rango;
     private String mision;
-    private String message;
 
     //Se establece el rango teniente
     public Teniente(String unidad) {
@@ -28,31 +26,22 @@ public class Teniente extends Rango implements OperacionesMilitares, Persona {
     }
 
 
-    public void regañar(int id){
-        try {
-            message = ("El Teniente fue regañado por no cumplir con su deber. Por lo tanto será degradado");
-            return ;  
-
-        } catch (Exception e) {
-            message = ("Este soldado no ha podido ser regañado.");
-            return;
-        }
+    public String regañar(int id){
+        return ("El teniente de la unidad " + unidad + " ha regañado a el soldado " + id);
     }
 
-
-    // Esto es para imprimir el estado del teniente
+    //esto es para imprimir el estado del teniente
     @Override
-    public void reportarEstado(){
+    public String reportarEstado(){
         try{
             if (random.nextBoolean()) {
-                message = ("El Teniente lidera la misión con su: " + unidad + "¡La misión fue exitosa!");
+                return "El Teniente lidera la misión con su: " + unidad + "¡La misión fue exitosa!";
             } else {
                 int soldadosPerdidos = random.nextInt(1);
-                message = ("El Teniente lidera la misión con su: " + unidad + "La misión fracasó. Soldados perdidos: " + soldadosPerdidos + "/" + unidad);
+                return "El Teniente lidera la misión con su: " + unidad + "La misión fracasó. Soldados perdidos: " + soldadosPerdidos + "/" + unidad;
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "El Teniente no ha podido reportar su estado.");
-            System.out.println(e);
+            return "El Teniente no ha podido reportar su estado.";
         }
     }
 

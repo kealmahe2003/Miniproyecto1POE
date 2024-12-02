@@ -1,7 +1,6 @@
 package militar.soldados;
 
 import javax.swing.JOptionPane;
-
 import militar.rangos.Persona;
 
 public class Soldado implements Persona{
@@ -35,9 +34,11 @@ public class Soldado implements Persona{
         try {
             // Si el nombre empieza y termina en la misma letra
             if (nombre.length() > 0 && nombre.charAt(0) == nombre.charAt(nombre.length() - 1)) {
-                message = ("El soldado " + nombre + " saluda, es un chico chill y tranquilo.");
+                JOptionPane.showMessageDialog(null, "El soldado " + nombre + " saluda, es un chico chill y tranquilo.",
+                 "Saludo", JOptionPane.OK_OPTION);
             } else {
-                message = ("El soldado " + nombre + " saluda formalmente.");
+                JOptionPane.showMessageDialog(null, "El soldado " + nombre + " saluda formalmente.",
+                 "Saludo", JOptionPane.OK_OPTION);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "El Soldado no ha podido saludar.");
