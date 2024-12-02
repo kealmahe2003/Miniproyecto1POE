@@ -24,7 +24,17 @@ public class Coronel extends Rango implements OperacionesMilitares, Persona {
 
     @Override
     public String reportarEstado() {
-        return ("Estrategia actual: " + estrategia + "Mision: " + getMision());
+        try {
+            if (random.nextBoolean()){
+                return "Gracias a la estrategia del Coronel, la misión fue exitosa.";
+            } else {
+                int soldadosPerdidos = random.nextInt(1000);
+                return "La estrategia del Coronel no funcionó, la misión fracasó. Soldados perdidos: " + soldadosPerdidos + "/" + 1000;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return "El Coronel no ha podido reportar su estado.";
+        }
     }
 
     public String saludar(){

@@ -33,7 +33,16 @@ public class Teniente extends Rango implements OperacionesMilitares, Persona {
     //esto es para imprimir el estado del teniente
     @Override
     public String reportarEstado(){
-        return ("El teniente de la unidad " + unidad + ", tiene la mision de: " + getMision());
+        try{
+            if (random.nextBoolean()) {
+                return "El Teniente lidera la misión con su: " + unidad + "¡La misión fue exitosa!";
+            } else {
+                int soldadosPerdidos = random.nextInt(1);
+                return "El Teniente lidera la misión con su: " + unidad + "La misión fracasó. Soldados perdidos: " + soldadosPerdidos + "/" + unidad;
+            }
+        } catch (Exception e) {
+            return "El Teniente no ha podido reportar su estado.";
+        }
     }
 
     public String getUnidad() {

@@ -1,4 +1,6 @@
 package militar.rangos;
+import java.awt.HeadlessException;
+import javax.swing.JOptionPane;
 import militar.Operaciones.OperacionesMilitares;
 import militar.soldados.Soldado;
 
@@ -6,6 +8,7 @@ import militar.soldados.Soldado;
 public class SoldadoRaso extends Soldado implements OperacionesMilitares{
 
     private String mision;
+    private String message;
 
     public SoldadoRaso(String nombre, String id) {
         super(nombre, id, "Soldado Raso", "Activo");
@@ -18,8 +21,28 @@ public class SoldadoRaso extends Soldado implements OperacionesMilitares{
     }
 
     public void realizarAccion() {
-        System.out.println("El Soldado Raso sigue las órdenes.");
+    try {
+            // genera un numero random del 1 al 3
+            int randomNum = new java.util.Random().nextInt(3) + 1;
+            // si el numero es 1, se va a entrenar
+            if (randomNum == 1) {
+                message = ("El Soldado Raso se encuentra entrenando.");
+            }
+            // si el numero es 2, se va a descansar
+            if (randomNum == 2) {
+                message = ("El Soldado Raso se encuentra descansando.");
+            }
+            // si el numero es 3, se va a patrullar
+            if (randomNum == 3) {
+                message = ("El Soldado Raso se encuentra patrullando.");
+            }
+            JOptionPane.showMessageDialog(null, message,"Soldado", JOptionPane.OK_CANCEL_OPTION);
+        } catch (HeadlessException e) {
+            JOptionPane.showMessageDialog(null, "El Soldado Raso no ha podido realizar ninguna acción.");
+            System.out.println(e);
+        }
     }
+    
 
 
     @Override
